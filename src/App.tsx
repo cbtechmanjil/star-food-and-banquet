@@ -10,6 +10,7 @@ import Events from "./pages/Events";
 import Gallery from "./pages/Gallery";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
+import BackToTop from "./components/BackToTop";
 
 const queryClient = new QueryClient();
 
@@ -18,6 +19,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      <BackToTop />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />

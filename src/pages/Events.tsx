@@ -38,7 +38,7 @@ const Events = () => {
             {events.map((event, i) => (
               <motion.div key={event.title} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className={`grid grid-cols-1 lg:grid-cols-2 gap-12 items-center ${i % 2 === 1 ? "lg:direction-rtl" : ""}`}>
                 <div className={i % 2 === 1 ? "lg:order-2" : ""}>
-                  <img src={event.image} alt={event.title} className="rounded-2xl w-full h-80 object-cover" />
+                  <img src={event.image} alt={event.title} className=" w-full h-80 object-cover" />
                 </div>
                 <div className={i % 2 === 1 ? "lg:order-1" : ""}>
                   <event.icon className="w-10 h-10 text-primary mb-4" />
@@ -61,7 +61,7 @@ const Events = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {packages.map((pkg, i) => (
               <motion.div key={pkg.name} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className={`glass-card-hover p-8 text-center ${pkg.highlight ? "ring-2 ring-primary scale-105" : ""}`}>
-                {pkg.highlight && <span className="inline-block bg-primary text-primary-foreground font-ui text-xs uppercase tracking-wider px-4 py-1 rounded-full mb-4">Most Popular</span>}
+                {pkg.highlight && <span className="inline-block bg-primary text-primary-foreground font-ui text-xs uppercase tracking-wider px-4 py-1 rounded-full                                                                  mb-4">Most Popular</span>}
                 <h3 className="font-heading text-2xl mb-2">{pkg.name}</h3>
                 <p className="font-heading text-4xl text-primary mb-6">{pkg.price}</p>
                 <ul className="space-y-3 mb-8">

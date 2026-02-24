@@ -61,7 +61,7 @@ const StatsSection = () => {
               viewport={{ once: true }}
               className="text-center"
             >
-              <div className="font-heading text-5xl md:text-6xl text-secondary italic">
+              <div className="font-heading text-5xl md:text-6xl text-white italic">
                 <Counter target={stat.value} inView={inView} />
               </div>
               <p className="font-body text-sm text-primary-foreground/70 mt-2 italic">{stat.label}</p>

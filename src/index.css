@@ -6,74 +6,80 @@
 
 @layer base {
   :root {
-    --background: 340 100% 98%;
-    --foreground: 0 0% 17%;
+    /* Brand Colors */
+    /* Primary: #F59620 → HSL 33 91% 54% */
+    /* Secondary: #28388F → HSL 231 56% 36% */
+
+    --background: 30 20% 98%;
+    --foreground: 231 30% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 17%;
+    --card-foreground: 231 30% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 17%;
+    --popover-foreground: 231 30% 15%;
 
+    /* Primary = #F59620 (orange) */
     --primary: 33 91% 54%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 342 60% 91%;
-    --secondary-foreground: 342 52% 57%;
+    /* Secondary = #28388F (deep blue) */
+    --secondary: 231 56% 36%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 340 30% 94%;
-    --muted-foreground: 0 0% 43%;
+    --muted: 231 20% 94%;
+    --muted-foreground: 231 15% 45%;
 
-    --accent: 342 22% 51%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 33 80% 92%;
+    --accent-foreground: 33 91% 32%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 338 40% 91%;
-    --input: 338 40% 91%;
-    --ring: 342 52% 57%;
+    --border: 231 20% 88%;
+    --input: 231 20% 88%;
+    --ring: 33 91% 54%;
 
     --radius: 1.25rem;
 
-    --sidebar-background: 340 100% 98%;
-    --sidebar-foreground: 0 0% 17%;
-    --sidebar-primary: 342 52% 57%;
+    --sidebar-background: 30 20% 98%;
+    --sidebar-foreground: 231 30% 15%;
+    --sidebar-primary: 33 91% 54%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 342 60% 91%;
-    --sidebar-accent-foreground: 0 0% 17%;
-    --sidebar-border: 338 40% 91%;
-    --sidebar-ring: 342 52% 57%;
+    --sidebar-accent: 231 56% 36%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 231 20% 88%;
+    --sidebar-ring: 33 91% 54%;
   }
 
   .dark {
-    --background: 340 20% 8%;
-    --foreground: 340 10% 95%;
-    --card: 340 20% 10%;
-    --card-foreground: 340 10% 95%;
-    --popover: 340 20% 10%;
-    --popover-foreground: 340 10% 95%;
-    --primary: 342 52% 57%;
+    --background: 231 30% 8%;
+    --foreground: 231 10% 95%;
+    --card: 231 30% 10%;
+    --card-foreground: 231 10% 95%;
+    --popover: 231 30% 10%;
+    --popover-foreground: 231 10% 95%;
+    --primary: 33 91% 54%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 342 30% 18%;
-    --secondary-foreground: 340 10% 95%;
-    --muted: 340 20% 15%;
-    --muted-foreground: 340 10% 65%;
-    --accent: 342 22% 51%;
-    --accent-foreground: 0 0% 100%;
+    --secondary: 231 56% 50%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 231 20% 15%;
+    --muted-foreground: 231 10% 65%;
+    --accent: 33 80% 25%;
+    --accent-foreground: 33 91% 80%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-    --border: 340 20% 18%;
-    --input: 340 20% 18%;
-    --ring: 342 52% 57%;
-    --sidebar-background: 340 20% 8%;
-    --sidebar-foreground: 340 10% 95%;
-    --sidebar-primary: 342 52% 57%;
+    --border: 231 20% 18%;
+    --input: 231 20% 18%;
+    --ring: 33 91% 54%;
+    --sidebar-background: 231 30% 8%;
+    --sidebar-foreground: 231 10% 95%;
+    --sidebar-primary: 33 91% 54%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 342 30% 18%;
-    --sidebar-accent-foreground: 340 10% 95%;
-    --sidebar-border: 340 20% 18%;
-    --sidebar-ring: 342 52% 57%;
+    --sidebar-accent: 231 56% 50%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 231 20% 18%;
+    --sidebar-ring: 33 91% 54%;
   }
 }
 
@@ -89,6 +95,15 @@
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Playfair Display', serif;
     letter-spacing: -0.02em;
+    color: hsl(var(--foreground));
+  }
+
+  a {
+    transition: color 0.3s ease;
+  }
+
+  a:hover {
+    color: hsl(var(--primary));
   }
 }
 
@@ -108,21 +123,64 @@
   }
 
   .section-subtitle {
-    @apply uppercase tracking-[0.2em] text-sm font-ui text-primary font-medium;
+    @apply uppercase tracking-[0.2em] text-sm font-ui font-semibold;
+    color: hsl(var(--primary));
   }
 
   .section-title {
-    @apply font-heading text-4xl md:text-5xl text-foreground;
+    @apply font-heading text-4xl md:text-5xl;
+    color: hsl(var(--foreground));
   }
 
+  /* Primary Button: #F59620 orange */
   .btn-primary {
-    @apply bg-primary text-primary-foreground rounded-xl px-8 py-3 font-body font-medium 
+    @apply inline-flex items-center justify-center rounded-xl px-8 py-3 font-body font-semibold text-white
            transition-all duration-300 hover:scale-105 hover:shadow-xl;
+    background-color: hsl(var(--primary));
+    color: #ffffff;
   }
 
+  .btn-primary:hover {
+    background-color: hsl(33, 91%, 46%);
+    color: #ffffff;
+    box-shadow: 0 8px 30px hsla(33, 91%, 54%, 0.45);
+  }
+
+  /* Secondary Button: #28388F deep blue */
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-xl px-8 py-3 font-body font-semibold text-white
+           transition-all duration-300 hover:scale-105 hover:shadow-xl;
+    background-color: hsl(var(--secondary));
+    color: #ffffff;
+  }
+
+  .btn-secondary:hover {
+    background-color: hsl(231, 56%, 28%);
+    color: #ffffff;
+    box-shadow: 0 8px 30px hsla(231, 56%, 36%, 0.45);
+  }
+
+  /* Outline Button */
   .btn-outline {
-    @apply border-2 border-primary text-primary rounded-xl px-8 py-3 font-body font-medium 
-           transition-all duration-300 hover:bg-primary hover:text-primary-foreground hover:scale-105;
+    @apply inline-flex items-center justify-center rounded-xl px-8 py-3 font-body font-semibold
+           border-2 transition-all duration-300 hover:scale-105;
+    border-color: hsl(var(--primary));
+    color: hsl(var(--primary));
+  }
+
+  .btn-outline:hover {
+    background-color: hsl(var(--primary));
+    color: #ffffff;
+  }
+
+  /* Outline White (for on dark/hero backgrounds) */
+  .btn-outline-white {
+    @apply inline-flex items-center justify-center rounded-xl px-8 py-3 font-body font-semibold
+           border-2 border-white text-white transition-all duration-300 hover:scale-105;
+  }
+
+  .btn-outline-white:hover {
+    background-color: rgba(255, 255, 255, 0.15);
   }
 }
 
@@ -137,5 +195,25 @@
 
   .font-ui {
     font-family: 'Inter', sans-serif;
+  }
+
+  /* Infinite scroll animation */
+  .scroll-gallery-track {
+    display: flex;
+    width: max-content;
+    animation: scroll-rtl 35s linear infinite;
+  }
+
+  .scroll-gallery-track:hover {
+    animation-play-state: paused;
+  }
+
+  @keyframes scroll-rtl {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
   }
 }

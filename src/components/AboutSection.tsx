@@ -6,7 +6,7 @@ const AboutSection = () => {
   return (
     <section className="py-24 bg-muted/30">
       <div className="container mx-auto px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 items-stretch max-w-6xl mx-auto overflow-hidden rounded-2xl">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 items-stretch max-w-full mx-auto overflow-hidden">
           {/* Image */}
           <motion.div
             initial={{ opacity: 0, x: -40 }}
@@ -30,7 +30,7 @@ const AboutSection = () => {
             <h2 className="section-title mb-3">About Us</h2>
             <p className="section-subtitle mb-8">Discover Our Story</p>
             <p className="font-body text-muted-foreground leading-relaxed mb-8">
-              For over 15 years, Elegance has been transforming ordinary spaces into extraordinary experiences.
+              For over 15 years, Star Food & Banquet has been transforming ordinary spaces into extraordinary experiences.
               Our dedicated team of event professionals brings creativity, precision, and passion to every celebration.
               From intimate gatherings to grand galas, we ensure every detail reflects your unique vision.
             </p>

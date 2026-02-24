@@ -36,7 +36,7 @@ const WhyUsSection = () => {
               transition={{ duration: 0.5, delay: i * 0.1 }}
               className="flex items-start gap-5"
             >
-              <div className="flex-shrink-0 w-14 h-14 rounded-xl bg-secondary flex items-center justify-center">
+              <div className="flex-shrink-0 w-14 h-14 bg-secondary flex items-center justify-center">
                 <f.icon className="w-6 h-6 text-primary" />
               </div>
               <div>

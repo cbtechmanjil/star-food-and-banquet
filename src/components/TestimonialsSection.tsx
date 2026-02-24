@@ -4,12 +4,12 @@ import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
 
 const testimonials = [
   {
-    text: "Elegance transformed our wedding into a fairy tale. Every detail was perfect — from the floral arrangements to the exquisite catering. Truly an unforgettable experience.",
+    text: "Star Food & Banquet transformed our wedding into a fairy tale. Every detail was perfect — from the floral arrangements to the exquisite catering. Truly an unforgettable experience.",
     name: "Sarah & James",
     role: "Wedding Couple",
   },
   {
-    text: "Our corporate gala was a resounding success thanks to the Elegance team. Professional, creative, and incredibly attentive to our needs.",
+    text: "Our corporate gala was a resounding success thanks to the Star Food & Banquet team. Professional, creative, and incredibly attentive to our needs.",
     name: "Michael Chen",
     role: "CEO, TechCorp",
   },
@@ -56,7 +56,7 @@ const TestimonialsSection = () => {
           </AnimatePresence>
 
           <div className="flex items-center justify-center gap-4 mt-10">
-            <button onClick={prev} className="w-12 h-12 border border-border rounded-lg flex items-center justify-center hover:bg-secondary transition-colors">
+            <button onClick={prev} className="w-12 h-12 border border-border flex items-center justify-center hover:bg-secondary transition-colors">
               <ChevronLeft className="w-5 h-5 text-foreground" />
             </button>
             <div className="flex gap-2">
@@ -68,7 +68,7 @@ const TestimonialsSection = () => {
                 />
               ))}
             </div>
-            <button onClick={next} className="w-12 h-12 border border-border rounded-lg flex items-center justify-center hover:bg-secondary transition-colors">
+            <button onClick={next} className="w-12 h-12 border border-border flex items-center justify-center hover:bg-secondary transition-colors">
               <ChevronRight className="w-5 h-5 text-foreground" />
             </button>
           </div>

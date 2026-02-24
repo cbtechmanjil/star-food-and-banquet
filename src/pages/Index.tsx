@@ -6,7 +6,7 @@ import WhyUsSection from "@/components/WhyUsSection";
 import StatsSection from "@/components/StatsSection";
 import BookingTimeline from "@/components/BookingTimeline";
 import TestimonialsSection from "@/components/TestimonialsSection";
-import FAQSection from "@/components/FAQSection";
+import InfiniteScrollGallery from "@/components/InfiniteScrollGallery";
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
 
@@ -21,7 +21,7 @@ const Index = () => {
       <StatsSection />
       <BookingTimeline />
       <TestimonialsSection />
-      <FAQSection />
+      <InfiniteScrollGallery />
       <CTASection />
       <Footer />
     </div>

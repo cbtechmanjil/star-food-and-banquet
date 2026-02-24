@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
+import logoImg from "@/assets/logo.png";
 
 const Footer = () => {
   return (
@@ -8,7 +9,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand */}
           <div>
-            <h3 className="font-heading text-2xl italic mb-4">Elegance</h3>
+            <img src={logoImg} alt="Star Food & Banquet" className="h-16 w-auto object-contain mb-6" />
             <p className="font-body text-sm text-primary-foreground/60 leading-relaxed">
               Premium event management and banquet services for weddings, parties, corporate events, and private celebrations.
             </p>
@@ -16,7 +17,7 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-ui text-sm uppercase tracking-wider mb-6 font-semibold">Quick Links</h4>
+            <h4 className="font-ui text-sm uppercase tracking-wider mb-6 font-semibold text-white">Quick Links</h4>
             <div className="flex flex-col gap-3">
               {["About", "Food Menu", "Events", "Gallery", "Contact"].map((l) => (
                 <Link key={l} to={`/${l.toLowerCase().replace(" ", "-")}`} className="font-body text-sm text-primary-foreground/60 hover:text-primary transition-colors">
@@ -28,7 +29,7 @@ const Footer = () => {
 
           {/* Services */}
           <div>
-            <h4 className="font-ui text-sm uppercase tracking-wider mb-6 font-semibold">Services</h4>
+            <h4 className="font-ui text-sm uppercase tracking-wider mb-6 font-semibold text-white">Services</h4>
             <div className="flex flex-col gap-3 font-body text-sm text-primary-foreground/60">
               <span>Wedding Planning</span>
               <span>Corporate Events</span>
@@ -40,7 +41,7 @@ const Footer = () => {
 
           {/* Contact */}
           <div>
-            <h4 className="font-ui text-sm uppercase tracking-wider mb-6 font-semibold">Contact</h4>
+            <h4 className="font-ui text-sm uppercase tracking-wider mb-6 font-semibold text-white">Contact</h4>
             <div className="flex flex-col gap-4 font-body text-sm text-primary-foreground/60">
               <div className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 mt-0.5 text-primary flex-shrink-0" />
@@ -52,7 +53,7 @@ const Footer = () => {
               </div>
               <div className="flex items-center gap-3">
                 <Mail className="w-4 h-4 text-primary flex-shrink-0" />
-                <span>hello@elegance.com</span>
+                <span>hello@starfoodandbanquet.com</span>
               </div>
               <div className="flex items-center gap-3">
                 <Clock className="w-4 h-4 text-primary flex-shrink-0" />
@@ -64,7 +65,7 @@ const Footer = () => {
 
         <div className="border-t border-primary-foreground/10 mt-12 pt-8 text-center">
           <p className="font-body text-xs text-primary-foreground/40">
-            © 2026 Elegance Events. All rights reserved.
+            © 2026 Star Food & Banquet. All rights reserved.
           </p>
         </div>
       </div>

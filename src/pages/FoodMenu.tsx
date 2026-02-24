@@ -58,7 +58,7 @@ const FoodMenu = () => {
           <Tabs defaultValue="Starters" className="w-full">
             <TabsList className="w-full flex justify-center gap-2 bg-transparent mb-12 flex-wrap">
               {menuCategories.map((cat) => (
-                <TabsTrigger key={cat.name} value={cat.name} className="font-ui text-sm uppercase tracking-wider px-6 py-3 rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all">
+                <TabsTrigger key={cat.name} value={cat.name} className="font-ui text-sm uppercase tracking-wider px-6 py-3 rounded-full data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all">
                   {cat.name}
                 </TabsTrigger>
               ))}
