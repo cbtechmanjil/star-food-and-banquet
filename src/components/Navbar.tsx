@@ -35,13 +35,15 @@ const Navbar = () => {
       className={`sticky top-0 z-50 transition-all duration-500 ${headerBg}`}
     >
       {/* Top bar – hidden on scroll */}
-      <div className={`transition-all duration-300 overflow-hidden ${scrolled ? "max-h-0 opacity-0" : "max-h-[60px] opacity-100 border-b border-border/50"}`}>
-        <div className="container mx-auto px-6 py-2.5 flex items-center justify-between text-sm font-body">
-          <span className="hidden md:block text-muted-foreground">12356 Glassford Street, New York, USA</span>
-          <span className="hidden md:block text-muted-foreground">Office Hours: 9:00 - 5:00 pm</span>
-          <div className="flex items-center gap-2 ml-auto md:ml-0">
-            <Phone className="w-4 h-4 text-primary" />
-            <span className="font-semibold text-foreground">1800 - 123 456 789</span>
+      <div className={`transition-all duration-300 overflow-hidden ${scrolled ? "max-h-0 opacity-0" : "max-h-[60px] opacity-100"}`}>
+        <div className="bg-accent text-primary-foreground">
+          <div className="container mx-auto px-6 py-2.5 flex items-center justify-between text-sm font-body">
+            <span className="hidden md:block text-primary-foreground/80">12356 Glassford Street, New York, USA</span>
+            <span className="hidden md:block text-primary-foreground/80">Office Hours: 9:00 - 5:00 pm</span>
+            <div className="flex items-center gap-2 ml-auto md:ml-0">
+              <Phone className="w-4 h-4 text-primary-foreground" />
+              <span className="font-semibold text-primary-foreground">1800 - 123 456 789</span>
+            </div>
           </div>
         </div>
       </div>
