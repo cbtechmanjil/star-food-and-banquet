@@ -65,9 +65,8 @@ const ServicesSection = () => {
               alt={services[1].title}
               className="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110"
             />
-            {/* Same as Corporate: only bottom fade, no mid-overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 to-transparent" />
-            <div className="absolute bottom-6 left-6">
+            <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-foreground/70 to-transparent" />
+            <div className="absolute bottom-6 left-6 z-10">
               <h3 className="font-heading text-2xl text-primary-foreground italic">{services[1].title}</h3>
             </div>
           </motion.div>
