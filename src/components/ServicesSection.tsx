@@ -87,8 +87,7 @@ const ServicesSection = () => {
                   alt={s.title}
                   className="w-full h-48 object-cover transition-transform duration-700 group-hover:scale-110"
                 />
-                {/* Same as Corporate: only bottom fade, no mid-overlay causing gray coverage */}
-                <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-foreground/70 to-transparent" />
                 <div className="absolute bottom-4 left-4 z-10">
                   <h3 className="font-heading text-xl text-primary-foreground italic">{s.title}</h3>
                 </div>
