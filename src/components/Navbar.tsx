@@ -36,7 +36,7 @@ const Navbar = () => {
     >
       {/* Top bar – hidden on scroll */}
       <div className={`transition-all duration-300 overflow-hidden ${scrolled ? "max-h-0 opacity-0" : "max-h-[60px] opacity-100"}`}>
-        <div className="bg-accent text-primary-foreground">
+        <div className="bg-secondary text-secondary-foreground">
           <div className="container mx-auto px-6 py-2.5 flex items-center justify-between text-sm font-body">
             <span className="hidden md:block text-primary-foreground/80">12356 Glassford Street, New York, USA</span>
             <span className="hidden md:block text-primary-foreground/80">Office Hours: 9:00 - 5:00 pm</span>
