@@ -25,7 +25,7 @@ const Events = () => {
   return (
     <div className="min-h-screen">
       <Navbar />
-      <section className="relative pt-40 pb-24 bg-secondary/30">
+      <section className="relative pt-24 pb-24  bg-gradient-to-r from-secondary/5 via-primary/5 to-secondary/5">
         <div className="container mx-auto px-6 text-center">
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="section-subtitle mb-3">What We Offer</motion.p>
           <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="font-heading text-5xl md:text-6xl italic">Our Events</motion.h1>
@@ -61,7 +61,7 @@ const Events = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {packages.map((pkg, i) => (
               <motion.div key={pkg.name} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className={`glass-card-hover p-8 text-center ${pkg.highlight ? "ring-2 ring-primary scale-105" : ""}`}>
-                {pkg.highlight && <span className="inline-block bg-primary text-primary-foreground font-ui text-xs uppercase tracking-wider px-4 py-1 rounded-full                                                                  mb-4">Most Popular</span>}
+                {pkg.highlight && <span className="inline-block bg-primary text-primary-foreground font-ui text-xs uppercase tracking-wider px-4 py-1 rounded-full mb-4">Most Popular</span>}
                 <h3 className="font-heading text-2xl mb-2">{pkg.name}</h3>
                 <p className="font-heading text-4xl text-primary mb-6">{pkg.price}</p>
                 <ul className="space-y-3 mb-8">

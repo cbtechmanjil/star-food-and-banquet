@@ -2,8 +2,15 @@ import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import FAQSection from "@/components/FAQSection";
-import { MapPin, Phone, Mail, Clock, Send } from "lucide-react";
+import { MapPin, Phone, Mail, Clock, Send, QrCode } from "lucide-react";
 import { useState } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const Contact = () => {
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", eventType: "", message: "" });
@@ -20,9 +27,7 @@ const Contact = () => {
 
       {/* Hero */}
       <section
-        className="relative pt-40 pb-24"
-        style={{ background: "linear-gradient(135deg, hsl(231 56% 36% / 0.08) 0%, hsl(33 91% 54% / 0.06) 100%)" }}
-      >
+        className="relative pt-24 pb-24 bg-gradient-to-r from-secondary/5 via-primary/5 to-secondary/5">
         <div className="container mx-auto px-6 text-center">
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="section-subtitle mb-3">
             Get In Touch
@@ -58,8 +63,8 @@ const Contact = () => {
                 ].map((info) => (
                   <div key={info.label} className="flex items-start gap-4">
                     <div
-                      className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
-                      style={{ backgroundColor: "hsl(33 91% 54% / 0.12)" }}
+                      className="w-12 h-12 flex items-center justify-center flex-shrink-0"
+                      style={{ backgroundColor: "hsl(231 56% 36%)" }}
                     >
                       <info.icon className="w-5 h-5" style={{ color: "hsl(33 91% 54%)" }} />
                     </div>
@@ -71,21 +76,35 @@ const Contact = () => {
                 ))}
               </div>
 
-              {/* Map placeholder */}
-              <div
-                className="mt-10 rounded-2xl overflow-hidden h-48 flex items-center justify-center"
-                style={{ background: "hsl(231 56% 36% / 0.08)", border: "1px solid hsl(231 56% 36% / 0.2)" }}
+              {/* QR Code for Map */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="mt-10 flex items-center gap-6 p-6 border border-border bg-card/50"
               >
-                <div className="text-center">
-                  <MapPin className="w-8 h-8 mx-auto mb-2" style={{ color: "hsl(231 56% 36%)" }} />
-                  <p className="font-ui text-sm text-muted-foreground">12356 Glassford St, New York</p>
+                <div className="flex-shrink-0">
+                  <img
+                    src="/images/qr-code-map.png"
+                    alt="QR Code for Map & Directions"
+                    className="w-28 h-28 object-contain"
+                  />
                 </div>
-              </div>
+                <div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <QrCode className="w-5 h-5" style={{ color: "hsl(231 56% 36%)" }} />
+                    <h3 className="font-heading text-xl">Scan for Map</h3>
+                  </div>
+                  <p className="font-body text-sm text-muted-foreground leading-relaxed">
+                    Scan for Map & Directions
+                  </p>
+                </div>
+              </motion.div>
             </motion.div>
 
             {/* Form */}
             <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
-              <form onSubmit={handleSubmit} className="glass-card p-8 md:p-10 space-y-6">
+              <form onSubmit={handleSubmit} className="bg-card/65 backdrop-blur-[20px] border border-border p-8 md:p-10 space-y-6" style={{ boxShadow: "0px 10px 40px rgba(0, 0, 0, 0.08)" }}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="font-ui text-sm font-medium text-foreground block mb-2">Full Name</label>
@@ -94,7 +113,7 @@ const Contact = () => {
                       required
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-border bg-background font-body text-sm focus:outline-none focus:ring-2 transition-all"
+                      className="w-full px-4 py-3 border border-border bg-background font-body text-sm focus:outline-none focus:ring-2 transition-all"
                       style={{ "--tw-ring-color": "hsl(33 91% 54% / 0.3)" } as React.CSSProperties}
                       placeholder="John Doe"
                     />
@@ -106,7 +125,7 @@ const Contact = () => {
                       required
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-border bg-background font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
+                      className="w-full px-4 py-3 border border-border bg-background font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
                       placeholder="john@email.com"
                     />
                   </div>
@@ -118,24 +137,27 @@ const Contact = () => {
                       type="tel"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-border bg-background font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
+                      className="w-full px-4 py-3 border border-border bg-background font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
                       placeholder="+1 234 567 890"
                     />
                   </div>
                   <div>
                     <label className="font-ui text-sm font-medium text-foreground block mb-2">Event Type</label>
-                    <select
+                    <Select
                       value={formData.eventType}
-                      onChange={(e) => setFormData({ ...formData, eventType: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-border bg-background font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
+                      onValueChange={(value) => setFormData({ ...formData, eventType: value })}
                     >
-                      <option value="">Select event type</option>
-                      <option value="wedding">Wedding</option>
-                      <option value="corporate">Corporate Event</option>
-                      <option value="party">Party</option>
-                      <option value="birthday">Birthday</option>
-                      <option value="other">Other</option>
-                    </select>
+                      <SelectTrigger className="w-full h-[46px] px-4 border border-border bg-background font-body text-sm rounded-none focus:ring-primary/30">
+                        <SelectValue placeholder="Select event type" />
+                      </SelectTrigger>
+                      <SelectContent className="rounded-none">
+                        <SelectItem value="wedding" className="font-body text-sm">Wedding</SelectItem>
+                        <SelectItem value="corporate" className="font-body text-sm">Corporate Event</SelectItem>
+                        <SelectItem value="party" className="font-body text-sm">Party</SelectItem>
+                        <SelectItem value="birthday" className="font-body text-sm">Birthday</SelectItem>
+                        <SelectItem value="other" className="font-body text-sm">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
                 <div>
@@ -144,11 +166,11 @@ const Contact = () => {
                     rows={5}
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl border border-border bg-background font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all resize-none"
+                    className="w-full px-4 py-3 border border-border bg-background font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all resize-none"
                     placeholder="Tell us about your event..."
                   />
                 </div>
-                <button type="submit" className="btn-primary w-full flex items-center justify-center gap-2 rounded-xl py-4">
+                <button type="submit" className="btn-primary w-full flex items-center justify-center gap-2 rounded-full py-4">
                   <Send className="w-4 h-4" />
                   Send Message
                 </button>

@@ -17,7 +17,7 @@ const About = () => {
     <div className="min-h-screen">
       <Navbar />
       {/* Hero */}
-      <section className="relative pt-40 pb-24 bg-secondary/30">
+      <section className="relative pt-24 pb-24 bg-gradient-to-r from-secondary/5 via-primary/5 to-secondary/5">
         <div className="container mx-auto px-6 text-center">
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="section-subtitle mb-3">Our Story</motion.p>
           <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="font-heading text-5xl md:text-6xl italic">About Star Food & Banquet</motion.h1>

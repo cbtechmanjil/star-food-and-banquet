@@ -92,9 +92,7 @@ const Gallery = () => {
 
       {/* Page Header */}
       <section
-        className="relative pt-40 pb-24"
-        style={{ background: "linear-gradient(135deg, hsl(231 56% 36% / 0.08) 0%, hsl(33 91% 54% / 0.06) 100%)" }}
-      >
+        className="relative pt-24 pb-24 bg-gradient-to-r from-secondary/5 via-primary/5 to-secondary/5">
         <div className="container mx-auto px-6 text-center">
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="section-subtitle mb-3">
             Our Portfolio

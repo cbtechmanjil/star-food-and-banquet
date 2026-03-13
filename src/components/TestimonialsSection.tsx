@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
+import flowerImg from "@/assets/flower-bouquet.jpg";
 
 const testimonials = [
   {
@@ -27,8 +28,27 @@ const TestimonialsSection = () => {
   const prev = () => setCurrent((p) => (p - 1 + testimonials.length) % testimonials.length);
 
   return (
-    <section className="py-24 bg-muted/30">
-      <div className="container mx-auto px-6">
+    <section className="py-24 bg-muted/30 relative overflow-hidden">
+      {/* Left flower decoration */}
+      <div className="absolute left-4 lg:left-12 top-1/2 -translate-y-1/2 pointer-events-none opacity-[100] hidden md:block">
+        <img
+          src={flowerImg}
+          alt=""
+          className="w-56 lg:w-64 h-auto"
+          style={{ transform: "scaleX(-1)" }}
+        />
+      </div>
+
+      {/* Right flower decoration */}
+      <div className="absolute right-4 lg:right-12 top-1/2 -translate-y-1/2 pointer-events-none opacity-[100] hidden md:block">
+        <img
+          src={flowerImg}
+          alt=""
+          className="w-56 lg:w-64 h-auto"
+        />
+      </div>
+
+      <div className="container mx-auto px-6 relative z-10">
         <div className="max-w-3xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
