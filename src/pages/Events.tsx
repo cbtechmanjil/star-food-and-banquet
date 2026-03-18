@@ -51,36 +51,6 @@ const Events = () => {
         </div>
       </section>
 
-      {/* Packages */}
-      <section className="py-24 bg-muted/30">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
-            <p className="section-subtitle mb-3">Choose Your Plan</p>
-            <h2 className="section-title">Event Packages</h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {packages.map((pkg, i) => (
-              <motion.div key={pkg.name} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className={`glass-card-hover p-8 text-center ${pkg.highlight ? "ring-2 ring-primary scale-105" : ""}`}>
-                {pkg.highlight && <span className="inline-block bg-primary text-primary-foreground font-ui text-xs uppercase tracking-wider px-4 py-1 rounded-full mb-4">Most Popular</span>}
-                <h3 className="font-heading text-2xl mb-2">{pkg.name}</h3>
-                <p className="font-heading text-4xl text-primary mb-6">{pkg.price}</p>
-                <ul className="space-y-3 mb-8">
-                  {pkg.features.map((f) => (
-                    <li key={f} className="font-body text-sm text-muted-foreground flex items-center justify-center gap-2">
-                      <Star className="w-3 h-3 text-primary" />
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-                <button className={pkg.highlight ? "btn-primary w-full" : "btn-outline w-full"}>
-                  Choose Plan
-                </button>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <CTASection />
       <Footer />
     </div>

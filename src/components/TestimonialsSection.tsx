@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
-import flowerImg from "@/assets/flower-bouquet.jpg";
+import flowerImg from "@/assets/flower-bouquet.png";
 
 const testimonials = [
   {
@@ -30,21 +30,28 @@ const TestimonialsSection = () => {
   return (
     <section className="py-24 bg-muted/30 relative overflow-hidden">
       {/* Left flower decoration */}
-      <div className="absolute left-4 lg:left-12 top-1/2 -translate-y-1/2 pointer-events-none opacity-[100] hidden md:block">
-        <img
+      <div className="absolute left-0 lg:left-0 top-1/2 -translate-y-1/2 pointer-events-none hidden md:block z-0">
+        <motion.img
           src={flowerImg}
           alt=""
-          className="w-56 lg:w-64 h-auto"
-          style={{ transform: "scaleX(-1)" }}
+          className="w-72 lg:w-96 h-auto"
+          initial={{ opacity: 0, x: -100, scaleX: -1 }}
+          whileInView={{ opacity: 1, x: 0, scaleX: -1 }}
+          transition={{ duration: 1, ease: "easeOut" }}
+          viewport={{ once: true }}
         />
       </div>
 
       {/* Right flower decoration */}
-      <div className="absolute right-4 lg:right-12 top-1/2 -translate-y-1/2 pointer-events-none opacity-[100] hidden md:block">
-        <img
+      <div className="absolute right-0 lg:right-0 top-1/2 -translate-y-1/2 pointer-events-none hidden md:block z-0">
+        <motion.img
           src={flowerImg}
           alt=""
-          className="w-56 lg:w-64 h-auto"
+          className="w-72 lg:w-96 h-auto"
+          initial={{ opacity: 0, x: 100 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1, ease: "easeOut" }}
+          viewport={{ once: true }}
         />
       </div>
 

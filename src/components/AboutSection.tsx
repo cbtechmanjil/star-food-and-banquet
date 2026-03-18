@@ -4,7 +4,7 @@ import aboutImg from "@/assets/about-venue.jpg";
 
 const AboutSection = () => {
   return (
-    <section className="py-24 bg-muted/30">
+    <section className="py-24 bg-secondary">
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 items-stretch max-w-full mx-auto overflow-hidden">
           {/* Image */}
@@ -30,9 +30,9 @@ const AboutSection = () => {
             <h2 className="section-title mb-3">About Us</h2>
             <p className="section-subtitle mb-8">Discover Our Story</p>
             <p className="font-body text-muted-foreground leading-relaxed mb-8">
-              For over 15 years, Star Food & Banquet has been transforming ordinary spaces into extraordinary experiences.
-              Our dedicated team of event professionals brings creativity, precision, and passion to every celebration.
-              From intimate gatherings to grand galas, we ensure every detail reflects your unique vision.
+              Welcome to Star Food and Banquet, the perfect destination where delightful dining meets unforgettable celebrations.
+              Located in the heart of the city, Star Food and Banquet is a family-friendly restaurant and event space that brings people together through great food, warm hospitality, and joyful experiences.
+              At Star Food and Banquet, we take pride in offering a diverse menu featuring delicious local and international dishes prepared with fresh ingredients and a passion for flavor.
             </p>
             <Link
               to="/about"

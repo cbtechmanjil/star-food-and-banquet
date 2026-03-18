@@ -10,6 +10,7 @@ import partyImg from "@/assets/service-party.jpg";
 import weddingImg from "@/assets/service-wedding.jpg";
 import eventImg from "@/assets/service-event.jpg";
 import statsBg from "@/assets/stats-bg.jpg";
+import CTASection from "@/components/CTASection";
 
 const categories = ["All", "Weddings", "Corporate", "Parties", "Venues"];
 
@@ -293,6 +294,7 @@ const Gallery = () => {
         )}
       </AnimatePresence>
 
+      <CTASection />
       <Footer />
     </div>
   );

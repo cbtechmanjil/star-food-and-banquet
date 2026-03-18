@@ -19,9 +19,16 @@ const Footer = () => {
           <div>
             <h4 className="font-ui text-sm uppercase tracking-wider mb-6 font-semibold text-white">Quick Links</h4>
             <div className="flex flex-col gap-3">
-              {["About", "Food Menu", "Events", "Gallery", "Contact"].map((l) => (
-                <Link key={l} to={`/${l.toLowerCase().replace(" ", "-")}`} className="font-body text-sm text-primary-foreground/60 hover:text-primary transition-colors">
-                  {l}
+              {[
+                { label: "About", path: "/about" },
+                { label: "Food Menu", path: "/food-menu" },
+                { label: "Our Café", path: "/our-cafe" },
+                { label: "Events", path: "/events" },
+                { label: "Gallery", path: "/gallery" },
+                { label: "Contact", path: "/contact" },
+              ].map((l) => (
+                <Link key={l.label} to={l.path} className="font-body text-sm text-primary-foreground/60 hover:text-primary transition-colors">
+                  {l.label}
                 </Link>
               ))}
             </div>

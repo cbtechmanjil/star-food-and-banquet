@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import CTASection from "@/components/CTASection";
 import {
   Salad,
   ChefHat,
@@ -577,6 +578,7 @@ const FoodMenu = () => {
         </div>
       </section>
 
+      <CTASection />
       <Footer />
     </div>
   );

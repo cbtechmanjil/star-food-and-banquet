@@ -1,15 +1,37 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import flower1 from "@/assets/CTA_Flower1.png";
+import flower2 from "@/assets/CTA_Flower2.png";
 
 const CTASection = () => {
   return (
     <section
-      className="py-24"
+      className="py-24 relative overflow-hidden"
       style={{
         background: "linear-gradient(135deg, hsl(231 56% 36%) 0%, hsl(231 56% 24%) 100%)",
       }}
     >
-      <div className="container mx-auto px-6 text-center">
+      {/* Decorative Flowers */}
+      <motion.img
+        src={flower1}
+        alt="Decorative flower"
+        className="absolute left-0 bottom-0 w-80 md:w-[450px] max-w-[40vw] opacity-90 object-contain pointer-events-none z-0"
+        initial={{ opacity: 0, x: -100 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        transition={{ duration: 1, ease: "easeOut" }}
+        viewport={{ once: true }}
+      />
+      <motion.img
+        src={flower2}
+        alt="Decorative flower"
+        className="absolute right-0 bottom-0 w-80 md:w-[450px] max-w-[40vw] opacity-90 object-contain pointer-events-none z-0"
+        initial={{ opacity: 0, x: 100 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        transition={{ duration: 1, ease: "easeOut" }}
+        viewport={{ once: true }}
+      />
+
+      <div className="container mx-auto px-6 text-center relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}

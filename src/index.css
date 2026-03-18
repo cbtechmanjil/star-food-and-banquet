@@ -216,4 +216,46 @@
       transform: translateX(-50%);
     }
   }
+
+  /* ── Café Signature Carousel ── */
+  .cafe-signature-track {
+    display: flex;
+    width: max-content;
+    animation: cafe-scroll-left 40s linear infinite;
+    will-change: transform;
+  }
+
+  .cafe-signature-track:hover {
+    animation-play-state: paused;
+  }
+
+  @keyframes cafe-scroll-left {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* ── Café Ambiance Gallery Carousel ── */
+  .cafe-gallery-track {
+    display: flex;
+    width: max-content;
+    animation: cafe-scroll-right 30s linear infinite;
+    will-change: transform;
+  }
+
+  .cafe-gallery-track:hover {
+    animation-play-state: paused;
+  }
+
+  @keyframes cafe-scroll-right {
+    0% {
+      transform: translateX(-50%);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
 }
