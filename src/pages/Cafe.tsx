@@ -168,8 +168,8 @@ const SignatureCarousel = () => {
             key={`sig-${i}`}
             className="flex-shrink-0 w-[300px] md:w-[340px] mx-3"
           >
-            <div className="glass-card-hover overflow-hidden group">
-              <div className="relative h-48 overflow-hidden">
+            <div className="glass-card-hover !rounded-none overflow-hidden group">
+              <div className="relative h-64 overflow-hidden">
                 <img
                   src={item.image}
                   alt={item.name}
@@ -178,18 +178,18 @@ const SignatureCarousel = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                 <div className="absolute bottom-3 left-4 flex items-center gap-2">
                   {item.veg && (
-                    <span className="inline-flex items-center gap-1 bg-emerald-600/90 text-white text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full backdrop-blur-sm">
+                    <span className="inline-flex items-center gap-1 bg-emerald-600/90 text-white text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 backdrop-blur-sm">
                       <Leaf className="w-3 h-3" /> Veg
                     </span>
                   )}
                   {item.vegan && (
-                    <span className="inline-flex items-center gap-1 bg-green-700/90 text-white text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full backdrop-blur-sm">
+                    <span className="inline-flex items-center gap-1 bg-green-700/90 text-white text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 backdrop-blur-sm">
                       Vegan
                     </span>
                   )}
                 </div>
                 <div className="absolute top-3 right-3">
-                  <span className="inline-flex items-center gap-1 bg-primary/90 text-white text-xs font-bold px-3 py-1 rounded-full backdrop-blur-sm">
+                  <span className="inline-flex items-center gap-1 bg-primary/90 text-white text-xs font-bold px-3 py-1 backdrop-blur-sm">
                     <Star className="w-3 h-3 fill-white" /> Bestseller
                   </span>
                 </div>
@@ -225,7 +225,7 @@ const AmbianceGallery = () => {
         {doubledImages.map((img, i) => (
           <div
             key={`gal-${i}`}
-            className="flex-shrink-0 w-[280px] md:w-[360px] h-[200px] md:h-[250px] mx-2 rounded-2xl overflow-hidden group"
+            className="flex-shrink-0 w-[280px] md:w-[360px] h-[280px] md:h-[340px] mx-2 overflow-hidden group"
           >
             <img
               src={img}
@@ -387,7 +387,7 @@ const Cafe = () => {
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.05, duration: 0.35 }}
-                className="glass-card-hover p-5 flex flex-col justify-between group"
+                className="glass-card-hover !rounded-none p-5 flex flex-col justify-between group"
               >
                 <div>
                   <div className="flex items-start justify-between mb-2">
@@ -396,7 +396,7 @@ const Cafe = () => {
                         {item.name}
                       </h4>
                       {item.bestseller && (
-                        <span className="inline-flex items-center gap-1 bg-primary/15 text-primary text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-full">
+                        <span className="inline-flex items-center gap-1 bg-primary/15 text-primary text-[10px] uppercase tracking-wider font-bold px-2 py-0.5">
                           <Flame className="w-3 h-3" /> Best
                         </span>
                       )}
@@ -510,7 +510,7 @@ const Cafe = () => {
                 ].map((row) => (
                   <div
                     key={row.day}
-                    className="flex items-center justify-between glass-card px-6 py-4"
+                    className="flex items-center justify-between glass-card !rounded-none px-6 py-4"
                   >
                     <div className="flex items-center gap-3">
                       <Clock className="w-5 h-5 text-primary" />
@@ -544,7 +544,7 @@ const Cafe = () => {
               viewport={{ once: true }}
               className="relative"
             >
-              <div className="glass-card p-10 md:p-14 text-center relative overflow-hidden">
+              <div className="glass-card !rounded-none p-10 md:p-14 text-center relative overflow-hidden">
                 {/* Decorative circles */}
                 <div className="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-primary/10" />
                 <div className="absolute -bottom-20 -left-20 w-56 h-56 rounded-full bg-secondary/10" />
