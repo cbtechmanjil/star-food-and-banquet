@@ -5,11 +5,9 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import {
   Coffee,
-  Leaf,
   Clock,
   MapPin,
   Phone,
-  ChevronDown,
   Star,
   Flame,
   IceCreamCone,
@@ -169,25 +167,13 @@ const SignatureCarousel = () => {
             className="flex-shrink-0 w-[300px] md:w-[340px] mx-3"
           >
             <div className="glass-card-hover !rounded-none overflow-hidden group">
-              <div className="relative h-64 overflow-hidden">
+              <div className="relative h-72 md:h-80 overflow-hidden">
                 <img
                   src={item.image}
                   alt={item.name}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                <div className="absolute bottom-3 left-4 flex items-center gap-2">
-                  {item.veg && (
-                    <span className="inline-flex items-center gap-1 bg-emerald-600/90 text-white text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 backdrop-blur-sm">
-                      <Leaf className="w-3 h-3" /> Veg
-                    </span>
-                  )}
-                  {item.vegan && (
-                    <span className="inline-flex items-center gap-1 bg-green-700/90 text-white text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 backdrop-blur-sm">
-                      Vegan
-                    </span>
-                  )}
-                </div>
                 <div className="absolute top-3 right-3">
                   <span className="inline-flex items-center gap-1 bg-primary/90 text-white text-xs font-bold px-3 py-1 backdrop-blur-sm">
                     <Star className="w-3 h-3 fill-white" /> Bestseller
@@ -225,7 +211,7 @@ const AmbianceGallery = () => {
         {doubledImages.map((img, i) => (
           <div
             key={`gal-${i}`}
-            className="flex-shrink-0 w-[280px] md:w-[360px] h-[280px] md:h-[340px] mx-2 overflow-hidden group"
+            className="flex-shrink-0 w-[320px] md:w-[420px] h-[340px] md:h-[440px] mx-2 overflow-hidden group"
           >
             <img
               src={img}
@@ -250,7 +236,7 @@ const Cafe = () => {
       <Navbar />
 
       {/* ══════════ HERO ══════════ */}
-      <section className="relative min-h-[70vh] md:min-h-[80vh] flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
           <img
             src={cafeHero}
@@ -328,13 +314,15 @@ const Cafe = () => {
           </motion.div>
         </div>
 
-        {/* Scroll indicator */}
+        {/* Scroll indicator – mouse icon (matches landing page) */}
         <motion.div
           animate={{ y: [0, 10, 0] }}
           transition={{ repeat: Infinity, duration: 2 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
+          className="absolute bottom-10 left-1/2 -translate-x-1/2"
         >
-          <ChevronDown className="w-8 h-8 text-white/60" />
+          <div className="w-6 h-10 border-2 border-white/60 rounded-full flex justify-center pt-2">
+            <div className="w-1.5 h-3 bg-white/80 rounded-full" />
+          </div>
         </motion.div>
       </section>
 
@@ -401,29 +389,6 @@ const Cafe = () => {
                         </span>
                       )}
                     </div>
-                    <div className="flex gap-1.5 ml-2 flex-shrink-0">
-                      {item.veg && (
-                        <span
-                          className="w-5 h-5 rounded flex items-center justify-center border-2 border-emerald-600"
-                          title="Vegetarian"
-                        >
-                          <span className="w-2.5 h-2.5 rounded-full bg-emerald-600" />
-                        </span>
-                      )}
-                      {item.vegan && (
-                        <span className="inline-flex items-center gap-0.5 bg-green-100 text-green-700 text-[9px] uppercase tracking-wider font-bold px-1.5 py-0.5 rounded">
-                          <Leaf className="w-2.5 h-2.5" />V
-                        </span>
-                      )}
-                      {item.veg === false && (
-                        <span
-                          className="w-5 h-5 rounded flex items-center justify-center border-2 border-red-600"
-                          title="Non-Vegetarian"
-                        >
-                          <span className="w-2.5 h-2.5 rounded-full bg-red-600" />
-                        </span>
-                      )}
-                    </div>
                   </div>
                   <p className="font-body text-xs text-muted-foreground leading-relaxed mb-3">
                     {item.desc}
@@ -432,10 +397,6 @@ const Cafe = () => {
                 <div className="flex items-center justify-between pt-2 border-t border-border/60">
                   <span className="font-ui text-base font-bold text-primary">
                     {item.price}
-                  </span>
-                  <span className="font-body text-[10px] text-muted-foreground/60 uppercase tracking-wider">
-                    {item.veg ? "Vegetarian" : "Non-Veg"}
-                    {item.vegan ? " · Vegan" : ""}
                   </span>
                 </div>
               </motion.div>

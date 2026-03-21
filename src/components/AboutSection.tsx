@@ -30,9 +30,7 @@ const AboutSection = () => {
             <h2 className="section-title mb-3">About Us</h2>
             <p className="section-subtitle mb-8">Discover Our Story</p>
             <p className="font-body text-muted-foreground leading-relaxed mb-8">
-              Welcome to Star Food and Banquet, the perfect destination where delightful dining meets unforgettable celebrations.
-              Located in the heart of the city, Star Food and Banquet is a family-friendly restaurant and event space that brings people together through great food, warm hospitality, and joyful experiences.
-              At Star Food and Banquet, we take pride in offering a diverse menu featuring delicious local and international dishes prepared with fresh ingredients and a passion for flavor.
+              Welcome to Star Food and Banquet, the perfect destination where delightful dining meets unforgettable celebrations. Located in the heart of the city, Star Food and Banquet is a family-friendly restaurant and event space that brings people together through great food, warm hospitality, and joyful experiences.
             </p>
             <Link
               to="/about"

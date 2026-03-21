@@ -2,16 +2,17 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Phone } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { TextRoll } from "@/components/v1/skiper58";
 import logoImg from "@/assets/logo.png";
 
 const navLinks = [
   { label: "Home", path: "/" },
   { label: "About", path: "/about" },
   { label: "Food Menu", path: "/food-menu" },
-  { label: "Our Café", path: "/our-cafe" },
   { label: "Events", path: "/events" },
+  { label: "Our Café", path: "/our-cafe" },
   { label: "Gallery", path: "/gallery" },
-  { label: "Contact", path: "/contact" },
+  // { label: "Contact", path: "/contact" },
 ];
 
 const Navbar = () => {
@@ -70,7 +71,9 @@ const Navbar = () => {
                 : "text-foreground hover:text-primary"
                 }`}
             >
-              {link.label}
+              <TextRoll duration={0.35}>
+                {link.label}
+              </TextRoll>
             </Link>
           ))}
         </nav>

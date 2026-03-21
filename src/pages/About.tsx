@@ -31,12 +31,19 @@ const About = () => {
             <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
               <h2 className="section-title mb-6">A Legacy of Star Food & Banquet Since 2010</h2>
               <p className="font-body text-muted-foreground leading-relaxed mb-4">
-                For over 15 years, Star Food & Banquet has been the premier choice for event management and banquet services.
-                What began as a small catering company has grown into a full-service event planning powerhouse.
+                Welcome to Star Food and Banquet, the perfect destination where delightful dining meets unforgettable celebrations. Located in the heart of the city, Star Food and Banquet is a family-friendly restaurant and event space that brings people together through great food, warm hospitality, and joyful experiences.
+              </p>
+              <p className="font-body text-muted-foreground leading-relaxed mb-4">
+                At Star Food and Banquet, we take pride in offering a diverse menu featuring delicious local and international dishes prepared with fresh ingredients and a passion for flavor. Whether you're craving a comforting meal with family, a fun lunch with friends, or a romantic dinner, our culinary team crafts every dish with care to satisfy every palate.
+              </p>
+              <p className="font-body text-muted-foreground leading-relaxed mb-4">
+                We also offer spacious and elegant banquet halls ideal for weddings, receptions, corporate events, birthday parties, anniversaries, and social gatherings. Our dedicated event team works closely with you to tailor every detail—from seating arrangements to décor and catering—so your special moment becomes a cherished memory.
+              </p>
+              <p className="font-body text-muted-foreground leading-relaxed mb-4">
+                Designed with comfort and style in mind, our venue boasts a welcoming ambiance, attentive service, and a comfortable play area to keep younger guests entertained. At Star Food and Banquet, every visit is more than just a meal—it's an experience.
               </p>
               <p className="font-body text-muted-foreground leading-relaxed">
-                Our team of seasoned professionals brings creativity, precision, and passion to every event.
-                We believe that every celebration tells a story, and we're here to make yours extraordinary.
+                Come savor the flavors, celebrate life's special occasions, and create unforgettable moments with us at Star Food and Banquet.
               </p>
             </motion.div>
           </div>
@@ -51,7 +58,7 @@ const About = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-5xl mx-auto">
             {values.map((v, i) => (
-              <motion.div key={v.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="glass-card-hover p-8 text-center">
+              <motion.div key={v.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="glass-card-hover !rounded-none p-8 text-center">
                 <v.icon className="w-10 h-10 text-primary mx-auto mb-4" />
                 <h3 className="font-heading text-xl mb-2">{v.title}</h3>
                 <p className="font-body text-sm text-muted-foreground">{v.desc}</p>
