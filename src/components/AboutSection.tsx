@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import aboutImg from "@/assets/about-venue.jpg";
+import aboutFlowerImg from "@/assets/about-flower.png";
 
 const AboutSection = () => {
   return (
@@ -24,8 +25,18 @@ const AboutSection = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="bg-card p-12 lg:p-16 flex flex-col justify-center"
+            className="bg-card p-12 lg:p-16 flex flex-col justify-center relative"
           >
+            {/* Added flower image in the top right corner */}
+            <motion.img 
+              initial={{ opacity: 0, scale: 0.8, rotate: -10 }}
+              whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1, delay: 0.4 }}
+              src={aboutFlowerImg} 
+              alt="Decorative flower" 
+              className="absolute top-0 right-0 w-32 md:w-48 opacity-70 pointer-events-none" 
+            />
             <div className="w-12 h-0.5 bg-primary mb-6" />
             <h2 className="section-title mb-3">About Us</h2>
             <p className="section-subtitle mb-8">Discover Our Story</p>
