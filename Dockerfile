@@ -1,5 +1,5 @@
-# Frontend Builder Stage
-FROM node:20-alpine as builder
+# Frontend with Vite preview
+FROM node:20-alpine
 
 WORKDIR /app
 
@@ -15,17 +15,8 @@ COPY . .
 # Build the application
 RUN npm run build
 
-# Production Stage - Nginx
-FROM nginx:alpine
-
-# Copy built assets from builder
-COPY --from=builder /app/dist /usr/share/nginx/html
-
-# Copy nginx configuration
-# COPY nginx.conf /etc/nginx/conf.d/default.conf
-
 # Expose port
 EXPOSE 7000
 
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Run Vite preview (production mode)
+CMD ["npm", "run", "preview", "--", "--host", "0.0.0.0", "--port", "7000"]
