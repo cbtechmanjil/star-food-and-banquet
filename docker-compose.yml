@@ -6,7 +6,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: backend
+    container_name: star_banquet_backend
     restart: always
     ports:
       - "${BACKEND_PORT}:${BACKEND_PORT}"
@@ -28,7 +28,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: frontend
+    container_name: star_banquet_frontend
     restart: always
     ports:
       - "${VITE_FRONTEND_PORT}:${VITE_FRONTEND_PORT}"
