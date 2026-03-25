@@ -1,18 +1,44 @@
-version: '3.8'
+version: "3.8"
 
 services:
-  minio:
-    image: minio/minio:latest
-    container_name: minio
+  # Backend Node.js API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend
+    restart: always
     ports:
-      - "9000:9000"
-      - "9001:9001"
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
     environment:
-      MINIO_ROOT_USER: admin
-      MINIO_ROOT_PASSWORD: password123
-    volumes:
-      - minio_data:/data
-    command: server /data --console-address ":9001"
+      - PORT=${BACKEND_PORT}
+      - MONGODB_URI=${MONGODB_URI}
+      - MINIO_ENDPOINT=${MINIO_ENDPOINT}
+      - MINIO_PORT=${MINIO_PORT}
+      - MINIO_USE_SSL=${MINIO_USE_SSL}
+      - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
+      - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
+      - MINIO_BUCKET=${MINIO_BUCKET}
+      - NODE_ENV=production
+    networks:
+      - app-network
 
-volumes:
-  minio_data:
+  # Frontend React + Nginx
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: frontend
+    restart: always
+    ports:
+      - "${VITE_FRONTEND_PORT}:${VITE_FRONTEND_PORT}"
+    environment:
+      - VITE_BACKEND_URL=${VITE_BACKEND_URL}
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
