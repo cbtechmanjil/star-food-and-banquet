@@ -4,6 +4,7 @@ import { Menu, X, Phone } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { TextRoll } from "@/components/v1/skiper58";
 import logoImg from "@/assets/logo.png";
+import { useContactSettings } from "@/hooks/use-contact-settings";
 
 const navLinks = [
   { label: "Home", path: "/" },
@@ -20,6 +21,7 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const isHome = location.pathname === "/";
+  const { data: contact } = useContactSettings();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 60);
@@ -40,11 +42,11 @@ const Navbar = () => {
       <div className={`transition-all duration-300 overflow-hidden ${scrolled ? "max-h-0 opacity-0" : "max-h-[60px] opacity-100"}`}>
         <div className="bg-secondary text-secondary-foreground">
           <div className="container mx-auto px-6 py-2.5 flex items-center justify-between text-sm font-body">
-            <span className="hidden md:block text-primary-foreground/80">12356 Glassford Street, New York, USA</span>
-            <span className="hidden md:block text-primary-foreground/80">Office Hours: 9:00 - 5:00 pm</span>
+            <span className="hidden md:block text-primary-foreground/80">{contact?.address || "12356 Glassford Street, New York, USA"}</span>
+            <span className="hidden md:block text-primary-foreground/80">Office Hours: {contact?.workingHours || "9:00 - 5:00 pm"}</span>
             <div className="flex items-center gap-2 ml-auto md:ml-0">
               <Phone className="w-4 h-4 text-primary-foreground" />
-              <span className="font-semibold text-primary-foreground">1800 - 123 456 789</span>
+              <span className="font-semibold text-primary-foreground">{contact?.phone || "1800 - 123 456 789"}</span>
             </div>
           </div>
         </div>

@@ -1,8 +1,11 @@
 import { Link } from "react-router-dom";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import logoImg from "@/assets/logo.png";
+import { useContactSettings } from "@/hooks/use-contact-settings";
 
 const Footer = () => {
+  const { data: contact } = useContactSettings();
   return (
     <footer className="bg-foreground text-primary-foreground">
       <div className="container mx-auto px-6 py-16">
@@ -52,25 +55,28 @@ const Footer = () => {
             <div className="flex flex-col gap-4 font-body text-sm text-primary-foreground/60">
               <div className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 mt-0.5 text-primary flex-shrink-0" />
-                <span>12356 Glassford Street, New York, USA</span>
+                <span>{contact?.address || "12356 Glassford Street, New York, USA"}</span>
               </div>
               <div className="flex items-center gap-3">
                 <Phone className="w-4 h-4 text-primary flex-shrink-0" />
-                <span>1800 - 123 456 789</span>
+                <span>{contact?.phone || "1800 - 123 456 789"}</span>
               </div>
               <div className="flex items-center gap-3">
                 <Mail className="w-4 h-4 text-primary flex-shrink-0" />
-                <span>hello@starfoodandbanquet.com</span>
+                <span>{contact?.email || "hello@starfoodandbanquet.com"}</span>
               </div>
               <div className="flex items-center gap-3">
                 <Clock className="w-4 h-4 text-primary flex-shrink-0" />
-                <span>Mon - Fri: 9:00 AM - 5:00 PM</span>
+                <span>{contact?.workingHours || "Mon - Fri: 9:00 AM - 5:00 PM"}</span>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="border-t border-primary-foreground/10 mt-12 pt-8 text-center">
+        <div className="border-t border-primary-foreground/10 mt-12 pt-8 text-center flex flex-col items-center gap-2">
+          <Link to="/login" className="font-body text-xs text-primary-foreground/60 hover:text-primary transition-colors">
+            Admin Login
+          </Link>
           <p className="font-body text-xs text-primary-foreground/40">
             © {new Date().getFullYear()} Star Food & Banquet. All rights reserved.
           </p>

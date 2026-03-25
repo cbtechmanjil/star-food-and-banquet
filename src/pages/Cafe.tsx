@@ -13,7 +13,9 @@ import {
   IceCreamCone,
   CakeSlice,
   Sandwich,
+  Leaf
 } from "lucide-react";
+import { useContactSettings } from "@/hooks/use-contact-settings";
 
 import cafeHero from "@/assets/cafe-hero.png";
 import cafeSmoothie from "@/assets/cafe-smoothie.png";
@@ -22,137 +24,13 @@ import cafeInterior1 from "@/assets/cafe-interior-1.png";
 import cafeInterior2 from "@/assets/cafe-interior-2.png";
 import cafeInterior3 from "@/assets/cafe-interior-3.png";
 
-/* ───────────────────────── data ───────────────────────── */
-
-type MenuItem = {
-  name: string;
-  desc: string;
-  price: string;
-  veg?: boolean;
-  vegan?: boolean;
-  bestseller?: boolean;
-  image?: string;
-};
-
-type MenuCategory = {
-  title: string;
-  icon: React.ElementType;
-  items: MenuItem[];
-};
-
-const menuCategories: MenuCategory[] = [
-  {
-    title: "Hot Beverages",
-    icon: Coffee,
-    items: [
-      { name: "Classic Espresso", desc: "Double-shot, rich & bold", price: "Rs. 180", veg: true },
-      { name: "Cappuccino", desc: "Creamy foam with cocoa dust", price: "Rs. 220", veg: true, bestseller: true },
-      { name: "Café Latte", desc: "Smooth steamed milk & espresso", price: "Rs. 240", veg: true },
-      { name: "Mocha Delight", desc: "Chocolate, espresso & whipped cream", price: "Rs. 280", veg: true },
-      { name: "Masala Chai", desc: "Traditional spiced milk tea", price: "Rs. 120", veg: true, vegan: true },
-      { name: "Green Tea", desc: "Organic Japanese sencha", price: "Rs. 150", veg: true, vegan: true },
-      { name: "Hot Chocolate", desc: "Belgian cocoa with marshmallows", price: "Rs. 260", veg: true },
-    ],
-  },
-  {
-    title: "Cold Beverages",
-    icon: IceCreamCone,
-    items: [
-      { name: "Iced Americano", desc: "Bold espresso over ice", price: "Rs. 200", veg: true, vegan: true },
-      { name: "Cold Brew", desc: "16-hr slow steeped, smooth finish", price: "Rs. 250", veg: true, bestseller: true },
-      { name: "Mango Smoothie", desc: "Fresh Alphonso mango blend", price: "Rs. 280", veg: true, vegan: true },
-      { name: "Berry Blast", desc: "Mixed berries, yogurt & honey", price: "Rs. 300", veg: true },
-      { name: "Iced Matcha Latte", desc: "Ceremonial grade matcha on ice", price: "Rs. 290", veg: true },
-      { name: "Mint Mojito", desc: "Refreshing mint & lime cooler", price: "Rs. 220", veg: true, vegan: true },
-    ],
-  },
-  {
-    title: "Snacks & Bites",
-    icon: Sandwich,
-    items: [
-      { name: "Grilled Panini", desc: "Pesto, mozzarella & sun-dried tomato", price: "Rs. 320", veg: true, bestseller: true },
-      { name: "Club Sandwich", desc: "Triple-decker with fries", price: "Rs. 350", veg: false },
-      { name: "Veg Spring Rolls", desc: "Crispy rolls with sweet chilli", price: "Rs. 220", veg: true, vegan: true },
-      { name: "Loaded Nachos", desc: "Cheese, jalapeños & salsa", price: "Rs. 280", veg: true },
-      { name: "Bruschetta", desc: "Toasted ciabatta, fresh tomato-basil", price: "Rs. 240", veg: true, vegan: true },
-      { name: "Chicken Wrap", desc: "Grilled chicken, lettuce & mayo", price: "Rs. 340", veg: false },
-    ],
-  },
-  {
-    title: "Desserts & Pastries",
-    icon: CakeSlice,
-    items: [
-      { name: "New York Cheesecake", desc: "Classic baked with berry compote", price: "Rs. 320", veg: true, bestseller: true },
-      { name: "Chocolate Brownie", desc: "Warm, gooey with vanilla ice cream", price: "Rs. 280", veg: true },
-      { name: "Tiramisu", desc: "Espresso-soaked mascarpone layers", price: "Rs. 340", veg: true },
-      { name: "French Croissant", desc: "Buttery, flaky, fresh-baked", price: "Rs. 180", veg: true },
-      { name: "Blueberry Muffin", desc: "Soft, fruity & glazed", price: "Rs. 160", veg: true },
-      { name: "Vegan Banana Bread", desc: "Moist, nutty & wholesome", price: "Rs. 200", veg: true, vegan: true },
-    ],
-  },
-];
-
-const signatureItems: (MenuItem & { image: string })[] = [
-  {
-    name: "Signature Cold Brew",
-    desc: "16-hour steeped, silky smooth finish with hints of caramel",
-    price: "Rs. 250",
-    veg: true,
-    image: cafeLatte,
-  },
-  {
-    name: "Açaí Smoothie Bowl",
-    desc: "Vibrant açaí base topped with granola, berries & honey",
-    price: "Rs. 380",
-    veg: true,
-    vegan: true,
-    image: cafeSmoothie,
-  },
-  {
-    name: "Artisan Cappuccino",
-    desc: "Hand-crafted latte art with premium single-origin beans",
-    price: "Rs. 220",
-    veg: true,
-    image: cafeLatte,
-  },
-  {
-    name: "NY Cheesecake",
-    desc: "Classic baked cheesecake with seasonal berry compote",
-    price: "Rs. 320",
-    veg: true,
-    image: cafeSmoothie,
-  },
-  {
-    name: "Mango Smoothie",
-    desc: "Fresh Alphonso mango blended to creamy perfection",
-    price: "Rs. 280",
-    veg: true,
-    vegan: true,
-    image: cafeSmoothie,
-  },
-  {
-    name: "Grilled Panini",
-    desc: "Pesto, mozzarella & sun-dried tomato on ciabatta",
-    price: "Rs. 320",
-    veg: true,
-    image: cafeLatte,
-  },
-];
-
-const galleryImages = [
-  cafeInterior1,
-  cafeInterior2,
-  cafeInterior3,
-  cafeHero,
-  cafeLatte,
-  cafeSmoothie,
-];
+import { useQuery } from "@tanstack/react-query";
 
 /* ─────────────── Signature Carousel (CSS-driven, infinite, no flicker) ─────────────── */
 
-const SignatureCarousel = () => {
-  // Double the items array for seamless infinite loop
-  const doubledItems = [...signatureItems, ...signatureItems];
+const SignatureCarousel = ({ items }: { items: any[] }) => {
+  if (!items || items.length === 0) return null;
+  const doubledItems = [...items, ...items];
 
   return (
     <div className="relative overflow-hidden">
@@ -185,9 +63,11 @@ const SignatureCarousel = () => {
                 <p className="font-body text-xs text-muted-foreground mb-3 leading-relaxed">
                   {item.desc}
                 </p>
-                <span className="font-ui text-base font-bold text-primary">
-                  {item.price}
-                </span>
+                {item.showPrice && (
+                  <span className="font-ui text-base font-bold text-primary">
+                    {item.price}
+                  </span>
+                )}
               </div>
             </div>
           </div>
@@ -199,8 +79,9 @@ const SignatureCarousel = () => {
 
 /* ─────────────── Ambiance Gallery Strip (CSS-driven, infinite, no flicker) ─────────────── */
 
-const AmbianceGallery = () => {
-  const doubledImages = [...galleryImages, ...galleryImages];
+const AmbianceGallery = ({ images }: { images: any[] }) => {
+  if (!images || images.length === 0) return null;
+  const doubledImages = [...images, ...images];
 
   return (
     <div className="relative overflow-hidden">
@@ -214,8 +95,8 @@ const AmbianceGallery = () => {
             className="flex-shrink-0 w-[320px] md:w-[420px] h-[340px] md:h-[440px] mx-2 overflow-hidden group"
           >
             <img
-              src={img}
-              alt={`Café ambiance ${(i % galleryImages.length) + 1}`}
+              src={img.url}
+              alt={`Café ambiance ${(i % images.length) + 1}`}
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
             />
           </div>
@@ -230,6 +111,54 @@ const AmbianceGallery = () => {
 const Cafe = () => {
   const [activeCategory, setActiveCategory] = useState(0);
   const menuRef = useRef<HTMLDivElement>(null);
+  const { data: contactData } = useContactSettings();
+
+  const { data, isLoading } = useQuery({
+    queryKey: ['cafeData'],
+    queryFn: async () => {
+      const res = await fetch("/api/cafe");
+      const json = await res.json();
+      return json.data;
+    }
+  });
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="w-10 h-10 rounded-full border-4 border-t-primary border-gray-200 animate-spin"></div>
+      </div>
+    );
+  }
+
+  const getCategoryIcon = (name: string) => {
+    const n = name.toLowerCase();
+    if (n.includes('hot') || n.includes('coffee') || n.includes('tea')) return Coffee;
+    if (n.includes('cold') || n.includes('juice') || n.includes('smoothie')) return IceCreamCone;
+    if (n.includes('snack') || n.includes('bite') || n.includes('sandwich') || n.includes('burger')) return Sandwich;
+    if (n.includes('dessert') || n.includes('pastry') || n.includes('cake') || n.includes('sweet')) return CakeSlice;
+    return Coffee;
+  };
+
+  const menuCategories = (data?.categories || []).map((cat: any) => ({
+    title: cat.name,
+    icon: getCategoryIcon(cat.name),
+    items: data?.menuItems?.filter((i: any) => i.category === cat.name) || []
+  }));
+
+  // Fallback if categories are not yet seeded for some reason
+  if (menuCategories.length === 0 && data?.menuItems?.length > 0) {
+    const uniqueCats = Array.from(new Set(data.menuItems.map((i: any) => i.category)));
+    uniqueCats.forEach((c: any) => {
+      menuCategories.push({
+        title: c,
+        icon: getCategoryIcon(c),
+        items: data.menuItems.filter((i: any) => i.category === c)
+      });
+    });
+  }
+
+  const heroImage = data?.banner?.bannerImage || cafeHero;
+  const heroText = data?.banner?.bannerContent || "Handcrafted coffees, fresh smoothies, and artisan bites — experience the warmth of Star Café nestled inside Star Food & Banquet.";
 
   return (
     <div className="min-h-screen">
@@ -238,11 +167,11 @@ const Cafe = () => {
       {/* ══════════ HERO ══════════ */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
-          <img
-            src={cafeHero}
-            alt="Star Café ambiance"
-            className="w-full h-full object-cover"
-          />
+          {heroImage ? (
+             <img src={heroImage} alt="Star Café" className="w-full h-full object-cover" />
+          ) : (
+             <div className="w-full h-full bg-charcoal" />
+          )}
           <div
             className="absolute inset-0"
             style={{
@@ -284,11 +213,10 @@ const Cafe = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="font-body text-lg md:text-xl text-white/90 max-w-2xl mx-auto mb-10 leading-relaxed"
+            className="font-body text-lg md:text-xl text-white/90 max-w-2xl mx-auto mb-10 leading-relaxed whitespace-pre-wrap"
             style={{ textShadow: "0 2px 12px rgba(0,0,0,0.8)" }}
           >
-            Handcrafted coffees, fresh smoothies, and artisan bites — experience
-            the warmth of Star Café nestled inside Star Food & Banquet.
+            {heroText}
           </motion.p>
 
           <motion.div
@@ -388,6 +316,16 @@ const Cafe = () => {
                           <Flame className="w-3 h-3" /> Best
                         </span>
                       )}
+                      {item.veg && (
+                        <span className="inline-flex items-center gap-1 bg-green-50 text-green-600 text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 border border-green-200">
+                          <Leaf className="w-3 h-3" /> Veg
+                        </span>
+                      )}
+                      {item.vegan && (
+                        <span className="inline-flex items-center gap-1 bg-teal-50 text-teal-600 text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 border border-teal-200">
+                          Vegan
+                        </span>
+                      )}
                     </div>
                   </div>
                   <p className="font-body text-xs text-muted-foreground leading-relaxed mb-3">
@@ -422,7 +360,7 @@ const Cafe = () => {
           </motion.div>
         </div>
 
-        <SignatureCarousel />
+        <SignatureCarousel items={data?.signatures || []} />
       </section>
 
       {/* ══════════ AMBIANCE GALLERY STRIP ══════════ */}
@@ -447,7 +385,7 @@ const Cafe = () => {
           </motion.div>
         </div>
 
-        <AmbianceGallery />
+        <AmbianceGallery images={data?.vibeImages || []} />
       </section>
 
       {/* ══════════ OPENING HOURS + RESERVE TABLE CTA ══════════ */}
@@ -488,13 +426,13 @@ const Cafe = () => {
                 <div className="flex items-center gap-3 text-muted-foreground">
                   <MapPin className="w-5 h-5 text-primary flex-shrink-0" />
                   <span className="font-body text-sm">
-                    Inside Star Food & Banquet, Glassford Street, New York
+                    {contactData?.address || "Inside Star Food & Banquet, Glassford Street, New York"}
                   </span>
                 </div>
               </div>
               <div className="mt-3 flex items-center gap-3 text-muted-foreground">
                 <Phone className="w-5 h-5 text-primary flex-shrink-0" />
-                <span className="font-body text-sm">1800 - 123 456 789</span>
+                <span className="font-body text-sm">{contactData?.phone || "1800 - 123 456 789"}</span>
               </div>
             </motion.div>
 

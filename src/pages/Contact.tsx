@@ -2,8 +2,11 @@ import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import FAQSection from "@/components/FAQSection";
+import { toast } from "sonner";
 import { MapPin, Phone, Mail, Clock, Send, QrCode } from "lucide-react";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useContactSettings } from "@/hooks/use-contact-settings";
 import {
   Select,
   SelectContent,
@@ -15,10 +18,25 @@ import {
 const Contact = () => {
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", eventType: "", message: "" });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const { data: contact } = useContactSettings();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert("Thank you! We'll be in touch soon.");
-    setFormData({ name: "", email: "", phone: "", eventType: "", message: "" });
+    try {
+      const res = await fetch("/api/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData)
+      });
+      if (res.ok) {
+        toast.success("Thank you! Your message has been sent.");
+        setFormData({ name: "", email: "", phone: "", eventType: "", message: "" });
+      } else {
+        toast.error("Failed to send message. Please try again.");
+      }
+    } catch (err) {
+      toast.error("Something went wrong. Please try again later.");
+    }
   };
 
   return (
@@ -56,10 +74,10 @@ const Contact = () => {
 
               <div className="space-y-6">
                 {[
-                  { icon: MapPin, label: "Address", value: "12356 Glassford Street, New York, USA" },
-                  { icon: Phone, label: "Phone", value: "1800 - 123 456 789" },
-                  { icon: Mail, label: "Email", value: "hello@starfood&banquet.com" },
-                  { icon: Clock, label: "Hours", value: "Mon - Fri: 9:00 AM - 5:00 PM" },
+                  { icon: MapPin, label: "Address", value: contact?.address || "12356 Glassford Street, New York, USA" },
+                  { icon: Phone, label: "Phone", value: contact?.phone || "1800 - 123 456 789" },
+                  { icon: Mail, label: "Email", value: contact?.email || "hello@starfoodandbanquet.com" },
+                  { icon: Clock, label: "Hours", value: contact?.workingHours || "Mon - Fri: 9:00 AM - 5:00 PM" },
                 ].map((info) => (
                   <div key={info.label} className="flex items-start gap-4">
                     <div

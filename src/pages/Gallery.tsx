@@ -1,39 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ChevronLeft, ChevronRight, X, ZoomIn } from "lucide-react";
-import heroBg from "@/assets/hero-banquet.jpg";
-import aboutImg from "@/assets/about-venue.jpg";
-import corpImg from "@/assets/service-corporate.jpg";
-import partyImg from "@/assets/service-party.jpg";
-import weddingImg from "@/assets/service-wedding.jpg";
-import eventImg from "@/assets/service-event.jpg";
-import statsBg from "@/assets/stats-bg.jpg";
 import CTASection from "@/components/CTASection";
 
 const categories = ["All", "Weddings", "Corporate", "Parties", "Venues"];
-
-const allImages = [
-  { src: heroBg, category: "Venues", title: "Grand Ballroom" },
-  { src: aboutImg, category: "Weddings", title: "Romantic Setup" },
-  { src: corpImg, category: "Corporate", title: "Corporate Gala" },
-  { src: partyImg, category: "Parties", title: "Cocktail Evening" },
-  { src: weddingImg, category: "Weddings", title: "Dream Wedding" },
-  { src: eventImg, category: "Parties", title: "Birthday Celebration" },
-  { src: statsBg, category: "Parties", title: "Dance Night" },
-  { src: heroBg, category: "Venues", title: "Crystal Hall" },
-  { src: aboutImg, category: "Weddings", title: "Floral Arch" },
-  { src: corpImg, category: "Corporate", title: "Annual Dinner" },
-  { src: partyImg, category: "Parties", title: "Garden Party" },
-  { src: weddingImg, category: "Weddings", title: "Golden Hour Ceremony" },
-  { src: eventImg, category: "Parties", title: "Gala Night" },
-  { src: statsBg, category: "Venues", title: "The Terrace" },
-  { src: heroBg, category: "Corporate", title: "Product Launch" },
-  { src: aboutImg, category: "Weddings", title: "Candlelit Dinner" },
-  { src: corpImg, category: "Corporate", title: "Board Meeting" },
-  { src: partyImg, category: "Parties", title: "New Year Bash" },
-];
 
 // 3 columns, 5 rows = 15 images shown initially per filter
 const COLS = 3;
@@ -44,6 +17,21 @@ const Gallery = () => {
   const [filter, setFilter] = useState("All");
   const [visibleCount, setVisibleCount] = useState(INITIAL_COUNT);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+  const { data: serverImages, isLoading } = useQuery({
+    queryKey: ['publicGalleryImages'],
+    queryFn: async () => {
+      const res = await fetch("/api/gallery");
+      const json = await res.json();
+      return json.data;
+    }
+  });
+
+  const allImages = serverImages ? serverImages.map((img: any) => ({
+    src: img.url,
+    category: img.category,
+    title: img.title
+  })) : [];
 
   const filtered = filter === "All" ? allImages : allImages.filter((img) => img.category === filter);
   const visibleImages = filtered.slice(0, visibleCount);
@@ -135,9 +123,18 @@ const Gallery = () => {
           </div>
 
           {/* Image Grid */}
-          <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <AnimatePresence mode="popLayout">
-              {visibleImages.map((img, i) => (
+          {isLoading ? (
+            <div className="flex justify-center py-20">
+              <div className="w-10 h-10 rounded-full border-4 border-t-gold border-gray-200 animate-spin"></div>
+            </div>
+          ) : visibleImages.length === 0 ? (
+            <div className="text-center py-20 text-gray-500">
+              No images match this category yet.
+            </div>
+          ) : (
+            <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <AnimatePresence mode="popLayout">
+                {visibleImages.map((img: any, i: number) => (
                 <motion.div
                   key={`${img.title}-${filter}-${i}`}
                   layout
@@ -176,6 +173,7 @@ const Gallery = () => {
               ))}
             </AnimatePresence>
           </motion.div>
+          )}
 
           {/* Load More Button */}
           {hasMore && (

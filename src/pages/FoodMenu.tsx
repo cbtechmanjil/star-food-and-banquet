@@ -1,317 +1,138 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CTASection from "@/components/CTASection";
 import {
-  Salad,
-  ChefHat,
-  Flame,
-  CookingPot,
-  IceCreamCone,
-  Coffee,
-  Sparkles,
-  Crown,
-  Gem,
-  Leaf,
-  Music,
-  Cherry,
+  Salad, ChefHat, Flame, CookingPot, IceCreamCone, 
+  Coffee, Sparkles, Crown, Gem, Leaf, Music, Cherry, Loader2
 } from "lucide-react";
 
 /* ───────────────────────────── TYPES ───────────────────────────── */
+const iconMap: Record<string, any> = {
+  Salad, ChefHat, Flame, CookingPot, IceCreamCone, 
+  Coffee, Sparkles, Crown, Gem, Leaf, Music, Cherry
+};
+
 interface MenuCategory {
   name: string;
   subtitle?: string;
-  icon: React.ElementType;
+  icon: string;
   items: string[];
 }
 
 interface MenuData {
+  _id: string;
   tab: string;
   categories: MenuCategory[];
 }
 
-/* ───────────────────────── MENU DATA ───────────────────────── */
-const menus: MenuData[] = [
-  {
-    tab: "Gold",
-    categories: [
-      {
-        name: "Veg Snacks",
-        subtitle: "Any 3",
-        icon: Salad,
-        items: [
-          "Peanut / Bhatmas Sadheko",
-          "Wedge Potato",
-          "Tofu Chilli",
-          "Veg Tempura",
-          "Veg Ball With Sauce",
-          "Veg Mo:Mo / Wanton",
-          "Spring Rolls",
-          "Veg / Onion Pakaoda",
-          "Finger Chips / Sliced Crispy",
-          "Mushroom Choila / Chilli",
-          "Sesame Potato",
-        ],
-      },
-      {
-        name: "Premium Veg Snacks",
-        subtitle: "Any 2",
-        icon: Sparkles,
-        items: [
-          "Crispy Mushroom",
-          "Cheese Ball",
-          "Paneer Pakaoda",
-          "Paneer Chilli",
-        ],
-      },
-      {
-        name: "Non-Veg Snacks",
-        subtitle: "Any 3",
-        icon: Flame,
-        items: [
-          "Chicken Chilli With Bone",
-          "Chicken Ball",
-          "Chicken BBQ / Sekuwa",
-          "Chicken Drumstick",
-          "Chicken Nuggets",
-          "Chicken Choila",
-          "Chicken Mo:Mo",
-          "Chicken Tikka",
-          "Chicken Singapore",
-          "Fish Tempura",
-          "Fish Finger",
-          "Small Fish",
-        ],
-      },
-      {
-        name: "Main Course",
-        subtitle: "Choose one dish from each category",
-        icon: ChefHat,
-        items: [
-          "Rice: Plain Rice / Peas Pulao / Masala Pulao / Jeera Rice / Fried Rice",
-          "Naan Roti: Plain / Butter / Baby / Paratha / Roti or Noodles",
-          "Dal: Mixed / Makhani / Yellow / White Beans",
-          "Seasonal Veg: Mixed Veg Dry / Aalu Parbal / Mixed Veg Chinese / Katahar Kabaab / Aalu Kauli",
-          "Paneer: Butter Masala / Mutter / Shahi / Palak",
-          "Saag: Pakuchey With Mushroom / Rayo / Palung / Chamsur",
-          "Chicken / Fish: Chicken Fry / Chicken Tawa / Chicken Curry / Fish Fry / Fish Curry",
-          "Mutton: Mutton Curry (Nepali Style) / Pakku",
-        ],
-      },
-      {
-        name: "Salad",
-        subtitle: "Any 3",
-        icon: Leaf,
-        items: [
-          "Green Salad",
-          "Thai Cucumber Salad",
-          "Waldorf Salad",
-          "Russian",
-          "Beetroot",
-        ],
-      },
-      {
-        name: "Pickle",
-        subtitle: "Any 2",
-        icon: Cherry,
-        items: [
-          "Mixed Achar",
-          "Tomato",
-          "Karela",
-          "Gundruk",
-          "Lapsi",
-          "ReadyMade Achar",
-          "Aalu",
-        ],
-      },
-      {
-        name: "Dessert",
-        subtitle: "Any 2",
-        icon: IceCreamCone,
-        items: [
-          "Dahi",
-          "Jalebi",
-          "Rasbari",
-          "Lalmohan",
-          "Gajar ko Haluwa",
-          "Moong ko Haluwa",
-        ],
-      },
-      {
-        name: "Soup & Beverages",
-        subtitle: "Any 1",
-        icon: Coffee,
-        items: [
-          "Mushroom",
-          "Veg",
-          "Hot and Sour",
-          "Tea",
-          "Coffee",
-        ],
-      },
-      {
-        name: "Additional Services",
-        subtitle: "Included",
-        icon: Music,
-        items: [
-          "DJ With Sound System",
-          "Flower Decoration",
-          "Mandap Decoration",
-          "Whole Mutton BBQ",
-          "Mutton Sekuwa / Tawa",
-          "Bandel Sekuwa",
-          "Pani Puri",
-          "Paan Masala",
-          "Ice Cream",
-          "Cold Drinks",
-        ],
-      },
-    ],
-  },
-  {
-    tab: "Diamond",
-    categories: [
-      {
-        name: "Veg Snacks",
-        subtitle: "Any 4",
-        icon: Salad,
-        items: [
-          "Peanut / Bhatmas Sadheko",
-          "Wedge Potato",
-          "Tofu Chilli",
-          "Veg Tempura",
-          "Veg Ball With Sauce",
-          "Veg Mo:Mo / Wanton",
-          "Spring Rolls",
-          "Veg / Onion Pakaoda",
-          "Finger Chips / Sliced Crispy",
-          "Mushroom Choila / Chilli / Crispy",
-          "Sesame Potato",
-          "Aalu Sadheko",
-          "Sweet Corn",
-        ],
-      },
-      {
-        name: "Premium Veg Snacks",
-        subtitle: "Any 2",
-        icon: Sparkles,
-        items: [
-          "Hara Bara Kabab",
-          "Cheese Ball / Pakaoda / Croquettes",
-          "Paneer Pakaoda / Chilli / Tikka",
-        ],
-      },
-      {
-        name: "Non-Veg Snacks",
-        subtitle: "Any 5",
-        icon: Flame,
-        items: [
-          "Chicken Chilli With Bone",
-          "Chicken Ball",
-          "Chicken BBQ / Sekuwa",
-          "Chicken Drumstick",
-          "Chicken Nuggets",
-          "Chicken Choila / Sadheko",
-          "Chicken Mo:Mo / Sausage",
-          "Chicken Tikka",
-          "Buff Chilli / Choila",
-          "Chicken Singapore / Satey",
-          "Fish Tempura",
-          "Fish Finger",
-          "Small Fish / Dragon Fish",
-          "Pork Chilli / Roasted Pork",
-        ],
-      },
-      {
-        name: "Main Course",
-        subtitle: "Choose one dish from each category",
-        icon: ChefHat,
-        items: [
-          "Rice: Plain Rice / Peas Pulao / Masala Pulao / Jeera Rice / Biryani / Brown Rice",
-          "Naan Roti: Plain / Butter / Baby / Paratha / Roti or Noodles",
-          "Dal: Mixed / Makhani / Yellow / White Beans / Mustang Dal",
-          "Seasonal Veg: Mixed Veg Dry / Aalu Parbal / Mixed Veg Chinese / Katahar Kabaab / Aalu Kauli",
-          "Paneer: Butter Masala / Mutter / Shahi / Palak",
-          "Saag: Pakuchey With Black Mushroom / Rayo / Palung / Chamsur",
-          "Chicken / Fish: Chicken Fry / Chicken Tawa / Chicken Curry / Fish Fry / Fish Curry",
-          "Mutton: Mutton Curry (Nepali Style) / Mutton Do-Pyaza",
-        ],
-      },
-      {
-        name: "Salad",
-        subtitle: "Any 3",
-        icon: Leaf,
-        items: [
-          "Green Salad",
-          "Thai Cucumber Salad",
-          "Waldorf Salad",
-          "Russian",
-          "Beetroot",
-        ],
-      },
-      {
-        name: "Pickle",
-        subtitle: "Any 2",
-        icon: Cherry,
-        items: [
-          "Mixed Achar",
-          "Tomato",
-          "Karela",
-          "Gundruk",
-          "Lapsi",
-          "ReadyMade Achar",
-          "Aalu",
-        ],
-      },
-      {
-        name: "Dessert",
-        subtitle: "Any 2",
-        icon: IceCreamCone,
-        items: [
-          "Dahi",
-          "Jalebi",
-          "Rasbari",
-          "Lalmohan",
-          "Gajar ko Haluwa",
-          "Moong ko Haluwa",
-        ],
-      },
-      {
-        name: "Soup & Beverages",
-        subtitle: "Any 1",
-        icon: Coffee,
-        items: [
-          "Mushroom",
-          "Veg",
-          "Hot and Sour",
-          "Tea",
-          "Coffee",
-        ],
-      },
-      {
-        name: "Additional Services",
-        subtitle: "Included",
-        icon: Music,
-        items: [
-          "DJ With Sound System",
-          "Flower Decoration",
-          "Mandap Decoration",
-          "Whole Mutton BBQ",
-          "Mutton Sekuwa / Tawa",
-          "Bandel Sekuwa",
-          "Pani Puri",
-          "Paan Masala",
-          "Ice Cream",
-          "Cold Drinks",
-        ],
-      },
-    ],
-  },
-];
+/* ────────────────────── CATEGORY CARD ────────────────────── */
+const CategoryCard = ({
+  category,
+  theme,
+  index,
+}: {
+  category: MenuCategory;
+  theme: any;
+  index: number;
+}) => {
+  const Icon = iconMap[category.icon] || ChefHat;
+  const isMainCourse = category.name === "Main Course";
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ delay: index * 0.06, duration: 0.5 }}
+      className="relative"
+    >
+      <div
+        className="border backdrop-blur-sm overflow-hidden transition-shadow duration-500 hover:shadow-xl rounded-2xl"
+        style={{
+          background: theme.cardBg,
+          borderColor: theme.accentBorder,
+          boxShadow: `0 4px 30px ${theme.accentGlow}`,
+        }}
+      >
+        <div
+          className="px-6 py-5 md:px-8 md:py-6 flex items-center gap-4 border-b"
+          style={{
+            background: theme.headerGradient,
+            borderColor: theme.accentBorder,
+          }}
+        >
+          <div
+            className="w-11 h-11 flex items-center justify-center flex-shrink-0 rounded-xl"
+            style={{ background: theme.iconBg }}
+          >
+            <Icon className="w-5 h-5" style={{ color: theme.accent }} />
+          </div>
+          <div className="flex-1 min-w-0">
+            <h3 className="font-heading text-xl md:text-2xl tracking-tight">
+              {category.name}
+            </h3>
+            {category.subtitle && (
+              <span
+                className="inline-block mt-1 px-3 py-0.5 font-ui text-[10px] uppercase tracking-widest rounded-full"
+                style={{
+                  background: theme.tagBg,
+                  color: theme.tagText,
+                }}
+              >
+                {category.subtitle}
+              </span>
+            )}
+          </div>
+        </div>
+
+        <div className="px-6 py-5 md:px-8 md:py-6">
+          {isMainCourse ? (
+            <div className="space-y-4">
+              {category.items.map((item, i) => {
+                const parts = item.split(": ");
+                const label = parts[0];
+                const options = parts.slice(1).join(": ");
+                return (
+                  <div key={i} className="pb-4 last:pb-0 border-b last:border-0" style={{ borderColor: theme.accentBorder }}>
+                    <p
+                      className="font-heading text-sm md:text-base font-semibold mb-1.5"
+                      style={{ color: theme.accent }}
+                    >
+                      {label}
+                    </p>
+                    <p className="font-body text-sm text-muted-foreground leading-relaxed">
+                      {options}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-x-6 gap-y-2.5">
+              {category.items.map((item, i) => (
+                <div key={i} className="flex items-start gap-2 py-1">
+                  <span
+                    className="mt-2 block w-1.5 h-1.5 flex-shrink-0"
+                    style={{ background: theme.accent, borderRadius: "1px" }}
+                  />
+                  <span className="font-body text-sm text-foreground/85 leading-relaxed">
+                    {item}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </motion.div>
+  );
+};
 
 /* ──────────────────────── THEME TOKENS ──────────────────────── */
-const themes = {
+const themes: Record<string, any> = {
   Gold: {
     accent: "hsl(33 91% 54%)",
     accentLight: "hsl(33 91% 54% / 0.12)",
@@ -344,115 +165,29 @@ const themes = {
   },
 };
 
-/* ────────────────────── CATEGORY CARD ────────────────────── */
-const CategoryCard = ({
-  category,
-  theme,
-  index,
-}: {
-  category: MenuCategory;
-  theme: (typeof themes)["Gold"];
-  index: number;
-}) => {
-  const Icon = category.icon;
-  const isMainCourse = category.name === "Main Course";
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{ delay: index * 0.06, duration: 0.5 }}
-      className="relative"
-    >
-      <div
-        className="border backdrop-blur-sm overflow-hidden transition-shadow duration-500 hover:shadow-xl"
-        style={{
-          background: theme.cardBg,
-          borderColor: theme.accentBorder,
-          boxShadow: `0 4px 30px ${theme.accentGlow}`,
-        }}
-      >
-        {/* Card header */}
-        <div
-          className="px-6 py-5 md:px-8 md:py-6 flex items-center gap-4 border-b"
-          style={{
-            background: theme.headerGradient,
-            borderColor: theme.accentBorder,
-          }}
-        >
-          <div
-            className="w-11 h-11 flex items-center justify-center flex-shrink-0"
-            style={{ background: theme.iconBg }}
-          >
-            <Icon className="w-5 h-5" style={{ color: theme.accent }} />
-          </div>
-          <div className="flex-1 min-w-0">
-            <h3 className="font-heading text-xl md:text-2xl tracking-tight">
-              {category.name}
-            </h3>
-            {category.subtitle && (
-              <span
-                className="inline-block mt-1 px-3 py-0.5 font-ui text-xs uppercase tracking-widest"
-                style={{
-                  background: theme.tagBg,
-                  color: theme.tagText,
-                }}
-              >
-                {category.subtitle}
-              </span>
-            )}
-          </div>
-        </div>
-
-        {/* Items grid */}
-        <div className="px-6 py-5 md:px-8 md:py-6">
-          {isMainCourse ? (
-            /* Main course: each sub-category on its own row */
-            <div className="space-y-4">
-              {category.items.map((item, i) => {
-                const [label, options] = item.split(": ");
-                return (
-                  <div key={i} className="pb-4 last:pb-0 border-b last:border-0" style={{ borderColor: theme.accentBorder }}>
-                    <p
-                      className="font-heading text-sm md:text-base font-semibold mb-1.5"
-                      style={{ color: theme.accent }}
-                    >
-                      {label}
-                    </p>
-                    <p className="font-body text-sm text-muted-foreground leading-relaxed">
-                      {options}
-                    </p>
-                  </div>
-                );
-              })}
-            </div>
-          ) : (
-            /* Regular items: multi-column grid */
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-2.5">
-              {category.items.map((item, i) => (
-                <div key={i} className="flex items-start gap-2 py-1">
-                  <span
-                    className="mt-2 block w-1.5 h-1.5 flex-shrink-0"
-                    style={{ background: theme.accent, borderRadius: "1px" }}
-                  />
-                  <span className="font-body text-sm text-foreground/85 leading-relaxed">
-                    {item}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-    </motion.div>
-  );
-};
-
 /* ──────────────────────── PAGE COMPONENT ──────────────────────── */
 const FoodMenu = () => {
   const [activeTab, setActiveTab] = useState<"Gold" | "Diamond">("Gold");
   const theme = themes[activeTab];
+
+  const { data: menus, isLoading } = useQuery<MenuData[]>({
+    queryKey: ['banquetMenus'],
+    queryFn: async () => {
+      const res = await fetch("/api/banquet");
+      const json = await res.json();
+      return json.data;
+    }
+  });
+
+  const activeMenu = menus?.find((m) => m.tab === activeTab);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <Loader2 className="w-12 h-12 animate-spin text-gold" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen">
@@ -476,14 +211,6 @@ const FoodMenu = () => {
           >
             Our Menu
           </motion.h1>
-          {/* <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.35 }}
-            className="font-body text-muted-foreground mt-4 max-w-xl mx-auto"
-          >
-            Explore our curated Gold &amp; Diamond banquet packages, crafted for every occasion.
-          </motion.p> */}
         </div>
       </section>
 
@@ -505,7 +232,7 @@ const FoodMenu = () => {
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className="relative flex items-center gap-2.5 px-8 py-3 font-ui text-sm uppercase tracking-[0.15em] font-semibold transition-all duration-400 focus:outline-none"
+                  className="relative flex items-center gap-2.5 px-8 py-3 font-ui text-sm uppercase tracking-[0.15em] font-semibold transition-all duration-400 focus:outline-none rounded-xl"
                   style={{
                     background: isActive ? themes[tab].tabActiveBg : "transparent",
                     color: isActive ? themes[tab].tabActiveText : themes[tab].accent,
@@ -563,16 +290,14 @@ const FoodMenu = () => {
               transition={{ duration: 0.35 }}
               className="space-y-8"
             >
-              {menus
-                .find((m) => m.tab === activeTab)!
-                .categories.map((cat, i) => (
-                  <CategoryCard
-                    key={cat.name}
-                    category={cat}
-                    theme={theme}
-                    index={i}
-                  />
-                ))}
+              {activeMenu?.categories?.map((cat, i) => (
+                <CategoryCard
+                  key={cat.name}
+                  category={cat}
+                  theme={theme}
+                  index={i}
+                />
+              ))}
             </motion.div>
           </AnimatePresence>
         </div>

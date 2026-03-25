@@ -14,7 +14,10 @@ import Events from "./pages/Events";
 import Gallery from "./pages/Gallery";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
+import Login from "./pages/Login";
+import AdminDashboard from "./pages/AdminDashboard";
 import BackToTop from "./components/BackToTop";
+import ScrollToTop from "./components/ScrollToTop";
 import { useEffect } from "react";
 
 const queryClient = new QueryClient();
@@ -27,6 +30,8 @@ const routeTitles: Record<string, string> = {
   "/events": "Events",
   "/gallery": "Gallery",
   "/contact": "Contact",
+  "/login": "Admin Login",
+  "/admin": "Admin Dashboard",
 };
 
 function AnimatedRoutes() {
@@ -39,18 +44,18 @@ function AnimatedRoutes() {
 
   return (
     <AnimatePresence mode="wait">
-      <PageTransitionLayout key={location.pathname} title={pageTitle}>
-        <Routes location={location} key={location.pathname}>
-          <Route path="/" element={<Index />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/food-menu" element={<FoodMenu />} />
-          <Route path="/our-cafe" element={<Cafe />} />
-          <Route path="/events" element={<Events />} />
-          <Route path="/gallery" element={<Gallery />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </PageTransitionLayout>
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={<PageTransitionLayout title={pageTitle}><Index /></PageTransitionLayout>} />
+        <Route path="/about" element={<PageTransitionLayout title={pageTitle}><About /></PageTransitionLayout>} />
+        <Route path="/food-menu" element={<PageTransitionLayout title={pageTitle}><FoodMenu /></PageTransitionLayout>} />
+        <Route path="/our-cafe" element={<PageTransitionLayout title={pageTitle}><Cafe /></PageTransitionLayout>} />
+        <Route path="/events" element={<PageTransitionLayout title={pageTitle}><Events /></PageTransitionLayout>} />
+        <Route path="/gallery" element={<PageTransitionLayout title={pageTitle}><Gallery /></PageTransitionLayout>} />
+        <Route path="/contact" element={<PageTransitionLayout title={pageTitle}><Contact /></PageTransitionLayout>} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
     </AnimatePresence>
   );
 }
@@ -62,6 +67,7 @@ const App = () => (
       <Sonner />
       <BackToTop />
       <BrowserRouter>
+        <ScrollToTop />
         <AnimatedRoutes />
       </BrowserRouter>
     </TooltipProvider>

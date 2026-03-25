@@ -1,31 +1,45 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
+import { ChevronLeft, ChevronRight, Quote, Loader2 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import flowerImg from "@/assets/flower-bouquet.png";
 
-const testimonials = [
-  {
-    text: "Star Food & Banquet transformed our wedding into a fairy tale. Every detail was perfect — from the floral arrangements to the exquisite catering. Truly an unforgettable experience.",
-    name: "Sarah & James",
-    role: "Wedding Couple",
-  },
-  {
-    text: "Our corporate gala was a resounding success thanks to the Star Food & Banquet team. Professional, creative, and incredibly attentive to our needs.",
-    name: "Michael Chen",
-    role: "CEO, TechCorp",
-  },
-  {
-    text: "The birthday celebration they organized for my daughter was beyond anything I could have imagined. The team went above and beyond!",
-    name: "Amanda Wilson",
-    role: "Private Client",
-  },
-];
+
 
 const TestimonialsSection = () => {
   const [current, setCurrent] = useState(0);
 
-  const next = () => setCurrent((p) => (p + 1) % testimonials.length);
-  const prev = () => setCurrent((p) => (p - 1 + testimonials.length) % testimonials.length);
+  const { data: testimonialsData, isLoading } = useQuery({
+    queryKey: ['testimonials'],
+    queryFn: async () => {
+      const res = await fetch("/api/testimonials");
+      const json = await res.json();
+      return json.data;
+    }
+  });
+
+  const testimonials = testimonialsData || [];
+
+  const next = () => {
+    if (testimonials.length === 0) return;
+    setCurrent((p) => (p + 1) % testimonials.length);
+  };
+  const prev = () => {
+    if (testimonials.length === 0) return;
+    setCurrent((p) => (p - 1 + testimonials.length) % testimonials.length);
+  };
+
+  if (isLoading) {
+    return (
+      <div className="py-24 flex items-center justify-center bg-muted/30">
+        <Loader2 className="w-10 h-10 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (testimonials.length === 0) {
+    return null; // Don't show the section if no testimonials exist
+  }
 
   return (
     <section className="py-24 bg-muted/30 relative overflow-hidden">
