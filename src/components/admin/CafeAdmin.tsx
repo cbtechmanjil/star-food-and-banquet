@@ -5,7 +5,8 @@ import {
   Loader2, Trash2, Image as ImageIcon, 
   Plus, X, UploadCloud, Flame, Leaf, Hexagon
 } from "lucide-react";
-import { apiGet, apiPost, apiPut, apiCall } from "@/lib/api";
+import { apiGet, apiPost, apiPut, apiCall, apiDelete } from "@/lib/api";
+import { getMinioUrl } from "@/lib/minioUrl";
 
 export default function CafeAdmin() {
   const [uploading, setUploading] = useState(false);
@@ -114,7 +115,7 @@ const CafeBannerAdmin = ({ data, refetch, uploading, setUploading }: any) => {
                </div>
             ) : data?.bannerImage ? (
                <div className="relative h-32 w-full">
-                 <img src={data.bannerImage} className="absolute inset-0 w-full h-full object-cover rounded-lg opacity-50 group-hover:opacity-20 transition-opacity" />
+                 <img src={getMinioUrl(data.bannerImage)} className="absolute inset-0 w-full h-full object-cover rounded-lg opacity-50 group-hover:opacity-20 transition-opacity" />
                  <div className="absolute inset-0 items-center justify-center flex flex-col z-10">
                    <UploadCloud className="h-8 w-8 text-charcoal mb-2" />
                    <span className="text-sm font-bold text-charcoal">Click to replace image</span>
@@ -428,7 +429,7 @@ const CafeSignatureAdmin = ({ items, refetch, uploading, setUploading }: any) =>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {items.map((item: any) => (
           <div key={item._id} className="relative group rounded-xl overflow-hidden border border-gray-200 aspect-square">
-            <img src={item.image} className="w-full h-full object-cover" />
+            <img src={getMinioUrl(item.image)} className="w-full h-full object-cover" />
             <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center p-4 text-center">
                <h4 className="text-white font-bold mb-1 leading-tight">{item.name}</h4>
                {item.showPrice && <span className="text-gold shadow-sm font-bold text-sm mb-2">{item.price}</span>}
@@ -501,7 +502,7 @@ const CafeVibeAdmin = ({ images, refetch, uploading, setUploading }: any) => {
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
          {images.map((img: any) => (
             <div key={img._id} className="relative group rounded-xl overflow-hidden aspect-square border border-gray-200">
-              <img src={img.url} className="w-full h-full object-cover" />
+              <img src={getMinioUrl(img.url)} className="w-full h-full object-cover" />
               <button onClick={() => handleDelete(img._id)} className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity text-white hover:text-red-500">
                  <Trash2 className="w-6 h-6" />
               </button>

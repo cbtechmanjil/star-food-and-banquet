@@ -31,6 +31,7 @@ import {
 import CafeAdmin from "@/components/admin/CafeAdmin";
 import BanquetMenuAdmin from "@/components/admin/BanquetMenuAdmin";
 import { apiGet, apiPost, apiPut, apiDelete, apiCall } from "@/lib/api";
+import { getMinioUrl } from "@/lib/minioUrl";
 
 interface AdminData {
   username: string;
@@ -762,7 +763,7 @@ const GalleryAdminCard = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {images.map((img: any) => (
               <div key={img._id} className="relative group rounded-xl overflow-hidden aspect-square border border-gray-200">
-                <img src={img.url} className="w-full h-full object-cover" />
+                <img src={getMinioUrl(img.url)} className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 p-2 text-center">
                   <p className="text-white text-xs font-semibold">{img.title}</p>
                   <span className="text-[10px] bg-gold text-charcoal px-2 py-0.5 rounded-full">{img.category}</span>

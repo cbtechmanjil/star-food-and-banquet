@@ -39,9 +39,13 @@ export async function apiCall(
   const { skipAuth, ...fetchOptions } = options || {};
   
   const headers: HeadersInit = {
-    'Content-Type': 'application/json',
     ...fetchOptions?.headers,
   };
+
+  // Only set Content-Type if not FormData (browser will set it automatically with boundary)
+  if (!(fetchOptions?.body instanceof FormData)) {
+    headers['Content-Type'] = 'application/json';
+  }
 
   // Add auth token if available and not skipped
   if (!skipAuth) {
