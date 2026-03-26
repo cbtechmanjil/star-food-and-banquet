@@ -24,6 +24,11 @@ export default defineConfig(({ mode }) => {
         },
       },
     },
+    preview: {
+      host: "::",
+      port: frontendPort,
+      allowedHosts: ["starrfoodbanquet.com", "www.starrfoodbanquet.com", "admin.starrfoodbanquet.com", "www.admin.starrfoodbanquet.com", "localhost"],
+    },
     plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
     resolve: {
       alias: {
