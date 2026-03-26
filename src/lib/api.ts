@@ -1,5 +1,5 @@
 // Get the backend URL from environment variables
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000/api';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://admin.starfoodbanquet.com/api';
 
 /**
  * Constructs the full API URL
