@@ -56,11 +56,8 @@ const uploadBannerMedia = async (file) => {
       { 'Content-Type': file.mimetype }
     );
 
-    const protocol = process.env.MINIO_USE_SSL === 'true' ? 'https' : 'http';
-    const endpoint = process.env.MINIO_ENDPOINT || 'localhost';
-    const port = process.env.MINIO_PORT || '9000';
-    
-    return `${protocol}://${endpoint}:${port}/${bucketName}/${objectName}`;
+    // Return only the relative path, not the full URL
+    return objectName;
   } catch (error) {
     throw new Error(`MinIO Upload Failed: ${error.message}`);
   }
@@ -81,11 +78,8 @@ const uploadGalleryMedia = async (file) => {
       { 'Content-Type': file.mimetype }
     );
 
-    const protocol = process.env.MINIO_USE_SSL === 'true' ? 'https' : 'http';
-    const endpoint = process.env.MINIO_ENDPOINT || 'localhost';
-    const port = process.env.MINIO_PORT || '9000';
-    
-    return `${protocol}://${endpoint}:${port}/${bucketName}/${objectName}`;
+    // Return only the relative path, not the full URL
+    return objectName;
   } catch (error) {
     throw new Error(`MinIO Gallery Upload Failed: ${error.message}`);
   }
@@ -95,13 +89,17 @@ const deleteMedia = async (fileUrl) => {
   if (!fileUrl) return;
   try {
     const bucketName = process.env.MINIO_BUCKET || 'star-food-assets';
-    const urlObj = new URL(fileUrl);
-    // Decode the path and strip the bucket prefix to get the exact object name
-    let objectName = decodeURIComponent(urlObj.pathname);
-    if (objectName.startsWith(`/${bucketName}/`)) {
-      objectName = objectName.replace(`/${bucketName}/`, '');
-    } else if (objectName.startsWith('/')) {
-      objectName = objectName.substring(1);
+    let objectName = fileUrl;
+    
+    // Handle full URLs by parsing them (for backward compatibility)
+    if (fileUrl.startsWith('http')) {
+      const urlObj = new URL(fileUrl);
+      objectName = decodeURIComponent(urlObj.pathname);
+      if (objectName.startsWith(`/${bucketName}/`)) {
+        objectName = objectName.replace(`/${bucketName}/`, '');
+      } else if (objectName.startsWith('/')) {
+        objectName = objectName.substring(1);
+      }
     }
     
     await minioClient.removeObject(bucketName, objectName);
@@ -126,11 +124,8 @@ const uploadCafeMedia = async (file) => {
       { 'Content-Type': file.mimetype }
     );
 
-    const protocol = process.env.MINIO_USE_SSL === 'true' ? 'https' : 'http';
-    const endpoint = process.env.MINIO_ENDPOINT || 'localhost';
-    const port = process.env.MINIO_PORT || '9000';
-    
-    return `${protocol}://${endpoint}:${port}/${bucketName}/${objectName}`;
+    // Return only the relative path, not the full URL
+    return objectName;
   } catch (error) {
     throw new Error(`MinIO Cafe Upload Failed: ${error.message}`);
   }

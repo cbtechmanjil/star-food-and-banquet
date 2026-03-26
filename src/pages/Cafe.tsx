@@ -26,6 +26,7 @@ import cafeInterior3 from "@/assets/cafe-interior-3.png";
 
 import { useQuery } from "@tanstack/react-query";
 import { apiGet } from "@/lib/api";
+import { getMinioUrl } from "@/lib/minioUrl";
 
 /* ─────────────── Signature Carousel (CSS-driven, infinite, no flicker) ─────────────── */
 
@@ -48,7 +49,7 @@ const SignatureCarousel = ({ items }: { items: any[] }) => {
             <div className="glass-card-hover !rounded-none overflow-hidden group">
               <div className="relative h-72 md:h-80 overflow-hidden">
                 <img
-                  src={item.image}
+                  src={getMinioUrl(item.image)}
                   alt={item.name}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
@@ -96,7 +97,7 @@ const AmbianceGallery = ({ images }: { images: any[] }) => {
             className="flex-shrink-0 w-[320px] md:w-[420px] h-[340px] md:h-[440px] mx-2 overflow-hidden group"
           >
             <img
-              src={img.url}
+              src={getMinioUrl(img.url)}
               alt={`Café ambiance ${(i % images.length) + 1}`}
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
             />
@@ -157,7 +158,7 @@ const Cafe = () => {
     });
   }
 
-  const heroImage = data?.banner?.bannerImage || cafeHero;
+  const heroImage = getMinioUrl(data?.banner?.bannerImage) || cafeHero;
   const heroText = data?.banner?.bannerContent || "Handcrafted coffees, fresh smoothies, and artisan bites — experience the warmth of Star Café nestled inside Star Food & Banquet.";
 
   return (
