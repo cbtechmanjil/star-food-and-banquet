@@ -27,7 +27,7 @@ export default defineConfig(({ mode }) => {
     preview: {
       host: "::",
       port: frontendPort,
-      allowedHosts: ["starrfoodbanquet.com", "www.starrfoodbanquet.com", "admin.starrfoodbanquet.com", "www.admin.starrfoodbanquet.com", "localhost"],
+      allowedHosts: ["starfoodbanquet.com", "www.starfoodbanquet.com", "admin.starfoodbanquet.com", "www.admin.starfoodbanquet.com", "localhost"],
     },
     plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
     resolve: {

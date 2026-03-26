@@ -14,10 +14,10 @@ const app = express();
 // Middleware
 const corsOptions = {
   origin: [
-    'https://starrfoodbanquet.com',
-    'https://www.starrfoodbanquet.com',
-    'https://admin.starrfoodbanquet.com',
-    'https://www.admin.starrfoodbanquet.com',
+    'https://starfoodbanquet.com',
+    'https://www.starfoodbanquet.com',
+    'https://admin.starfoodbanquet.com',
+    'https://www.admin.starfoodbanquet.com',
     'http://localhost:7000',
     'http://localhost:3000',
   ],
