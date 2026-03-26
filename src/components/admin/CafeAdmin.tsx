@@ -5,6 +5,7 @@ import {
   Loader2, Trash2, Image as ImageIcon, 
   Plus, X, UploadCloud, Flame, Leaf, Hexagon
 } from "lucide-react";
+import { apiGet, apiPost, apiPut, apiCall } from "@/lib/api";
 
 export default function CafeAdmin() {
   const [uploading, setUploading] = useState(false);
@@ -14,8 +15,7 @@ export default function CafeAdmin() {
   const { data, refetch, isLoading } = useQuery({
     queryKey: ['cafeData'],
     queryFn: async () => {
-      const res = await fetch("/api/cafe");
-      const json = await res.json();
+      const json = await apiGet("/cafe");
       return json.data;
     }
   });
@@ -66,12 +66,11 @@ const CafeBannerAdmin = ({ data, refetch, uploading, setUploading }: any) => {
     formData.append("bannerContent", content);
 
     try {
-      const res = await fetch("/api/cafe/admin/banner", {
+      const response = await apiCall("/cafe/admin/banner", {
         method: "PUT",
-        headers: { Authorization: `Bearer ${localStorage.getItem("adminToken")}` },
         body: formData
       });
-      if (res.ok) {
+      if (response.ok) {
         toast.success("Banner updated");
         setFile(null);
         refetch();
@@ -144,26 +143,17 @@ const CafeCategoryAdmin = ({ categories, refetch }: any) => {
     if (!newCat.trim()) return;
     setLoading(true);
     try {
-      const res = await fetch("/api/cafe/admin/categories", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem("adminToken")}` },
-        body: JSON.stringify({ name: newCat })
-      });
-      if (res.ok) {
-        toast.success("Category added");
-        setNewCat("");
-        refetch();
-      }
+      await apiPost("/cafe/admin/categories", { name: newCat });
+      toast.success("Category added");
+      setNewCat("");
+      refetch();
     } finally { setLoading(false); }
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm("Delete category? Items in this category will remain but will be uncategorized.")) return;
     try {
-      await fetch(`/api/cafe/admin/categories/${id}`, { 
-        method: "DELETE", 
-        headers: { Authorization: `Bearer ${localStorage.getItem("adminToken")}` } 
-      });
+      await apiDelete(`/cafe/admin/categories/${id}`);
       toast.success("Category deleted");
       refetch();
     } catch {}
@@ -329,21 +319,15 @@ const CafeMenuAdmin = ({ items, categories, refetch }: any) => {
     if (categories.length === 0) return toast.error("Please create a category first");
     setAdding(true);
     try {
-      const res = await fetch("/api/cafe/admin/menu", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem("adminToken")}` },
-        body: JSON.stringify({ 
-          name: "New Menu Item", 
-          desc: "Add a delicious description here.",
-          price: "Rs. 0",
-          category: categories[0].name,
-          veg: true
-        })
+      await apiPost("/cafe/admin/menu", { 
+        name: "New Menu Item", 
+        desc: "Add a delicious description here.",
+        price: "Rs. 0",
+        category: categories[0].name,
+        veg: true
       });
-      if (res.ok) {
-        toast.success("Placeholder added! Click edit to customize.");
-        refetch();
-      }
+      toast.success("Placeholder added! Click edit to customize.");
+      refetch();
     } finally { setAdding(false); }
   };
 
@@ -395,12 +379,11 @@ const CafeSignatureAdmin = ({ items, refetch, uploading, setUploading }: any) =>
     formData.append("showPrice", form.showPrice.toString());
 
     try {
-      const res = await fetch("/api/cafe/admin/signature", {
+      const response = await apiCall("/cafe/admin/signature", {
         method: "POST",
-        headers: { Authorization: `Bearer ${localStorage.getItem("adminToken")}` },
         body: formData
       });
-      if (res.ok) {
+      if (response.ok) {
         toast.success("Signature item added");
         setForm({ name: "", desc: "", price: "", showPrice: true });
         setFile(null);
@@ -412,7 +395,7 @@ const CafeSignatureAdmin = ({ items, refetch, uploading, setUploading }: any) =>
   const handleDelete = async (id: string) => {
     if(!confirm("Delete signature item?")) return;
     try {
-      await fetch(`/api/cafe/admin/signature/${id}`, { method: "DELETE", headers: { Authorization: `Bearer ${localStorage.getItem("adminToken")}` } });
+      await apiDelete(`/cafe/admin/signature/${id}`);
       toast.success("Deleted");
       refetch();
     } catch {}
@@ -478,12 +461,11 @@ const CafeVibeAdmin = ({ images, refetch, uploading, setUploading }: any) => {
     const formData = new FormData();
     files.forEach(f => formData.append("images", f));
     try {
-      const res = await fetch("/api/cafe/admin/vibe/upload", {
+      const response = await apiCall("/cafe/admin/vibe/upload", {
         method: "POST",
-        headers: { Authorization: `Bearer ${localStorage.getItem("adminToken")}` },
         body: formData
       });
-      if(res.ok) {
+      if(response.ok) {
         toast.success("Images uploaded");
         setFiles([]);
         refetch();
@@ -494,7 +476,7 @@ const CafeVibeAdmin = ({ images, refetch, uploading, setUploading }: any) => {
   const handleDelete = async (id: string) => {
     if(!confirm("Delete vibe image?")) return;
     try {
-      await fetch(`/api/cafe/admin/vibe/${id}`, { method: "DELETE", headers: { Authorization: `Bearer ${localStorage.getItem("adminToken")}` } });
+      await apiDelete(`/cafe/admin/vibe/${id}`);
       toast.success("Deleted");
       refetch();
     } catch {}

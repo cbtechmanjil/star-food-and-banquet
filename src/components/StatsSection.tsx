@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import statsBg from "@/assets/stats-bg.jpg";
+import { apiGet } from "@/lib/api";
 
 
 
@@ -36,8 +37,7 @@ const StatsSection = () => {
   const { data: statsData, isLoading } = useQuery({
     queryKey: ['stats'],
     queryFn: async () => {
-      const res = await fetch("/api/stats");
-      const json = await res.json();
+      const json = await apiGet("/stats");
       return json.data;
     }
   });

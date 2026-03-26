@@ -30,6 +30,7 @@ import {
 
 import CafeAdmin from "@/components/admin/CafeAdmin";
 import BanquetMenuAdmin from "@/components/admin/BanquetMenuAdmin";
+import { apiGet, apiPost, apiPut, apiDelete, apiCall } from "@/lib/api";
 
 interface AdminData {
   username: string;
@@ -41,8 +42,7 @@ const ContactSettingsCard = () => {
   const { data, refetch } = useQuery({
     queryKey: ['contactSettings'],
     queryFn: async () => {
-      const res = await fetch("/api/settings/contact");
-      const json = await res.json();
+      const json = await apiGet("/settings/contact");
       return json.data;
     }
   });
@@ -61,16 +61,7 @@ const ContactSettingsCard = () => {
   const handleSave = async () => {
     setLoading(true);
     try {
-      const token = localStorage.getItem("adminToken");
-      const res = await fetch("/api/settings/admin/contact", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify(formData)
-      });
-      const json = await res.json();
+      const json = await apiPut("/settings/admin/contact", formData);
       if (json.success) {
         toast.success("Contact settings updated!");
         refetch();
@@ -127,20 +118,10 @@ const InlineTestimonialCard = ({ testimonial, onRefetch }: { testimonial: any, o
     if (!formData.text || !formData.name || !formData.role) return;
     setLoading(true);
     try {
-      const token = localStorage.getItem("adminToken");
-      const res = await fetch(`/api/testimonials/admin/${testimonial._id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify(formData)
-      });
-      if (res.ok) {
-        toast.success("Updated!");
-        setIsEditing(false);
-        onRefetch();
-      }
+      await apiPut(`/testimonials/admin/${testimonial._id}`, formData);
+      toast.success("Updated!");
+      setIsEditing(false);
+      onRefetch();
     } finally {
       setLoading(false);
     }
@@ -149,15 +130,9 @@ const InlineTestimonialCard = ({ testimonial, onRefetch }: { testimonial: any, o
   const handleDelete = async () => {
     if (!confirm("Delete this testimonial?")) return;
     try {
-      const token = localStorage.getItem("adminToken");
-      const res = await fetch(`/api/testimonials/admin/${testimonial._id}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      if (res.ok) {
-        toast.success("Deleted");
-        onRefetch();
-      }
+      await apiDelete(`/testimonials/admin/${testimonial._id}`);
+      toast.success("Deleted");
+      onRefetch();
     } catch {}
   };
 
@@ -232,8 +207,7 @@ const TestimonialsSettingsCard = () => {
   const { data: testimonials, refetch } = useQuery({
     queryKey: ['adminTestimonials'],
     queryFn: async () => {
-      const res = await fetch("/api/testimonials");
-      const json = await res.json();
+      const json = await apiGet("/testimonials");
       return json.data;
     }
   });
@@ -243,23 +217,13 @@ const TestimonialsSettingsCard = () => {
   const handleAddNew = async () => {
     setAdding(true);
     try {
-      const token = localStorage.getItem("adminToken");
-      const res = await fetch("/api/testimonials/admin", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({ 
-          text: "Double click to edit and add your client's wonderful feedback here.", 
-          name: "Client Name", 
-          role: "Event Type" 
-        })
+      await apiPost("/testimonials/admin", { 
+        text: "Double click to edit and add your client's wonderful feedback here.", 
+        name: "Client Name", 
+        role: "Event Type" 
       });
-      if (res.ok) {
-        toast.success("New testimonial placeholder added!");
-        refetch();
-      }
+      toast.success("New testimonial placeholder added!");
+      refetch();
     } finally {
       setAdding(false);
     }
@@ -303,20 +267,10 @@ const InlineStatCard = ({ stat, onRefetch }: { stat: any, onRefetch: () => void 
   const handleSave = async () => {
     setLoading(true);
     try {
-      const token = localStorage.getItem("adminToken");
-      const res = await fetch(`/api/stats/admin/${stat._id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({ ...formData, value: Number(formData.value) })
-      });
-      if (res.ok) {
-        toast.success("Updated!");
-        setIsEditing(false);
-        onRefetch();
-      }
+      await apiPut(`/stats/admin/${stat._id}`, { ...formData, value: Number(formData.value) });
+      toast.success("Updated!");
+      setIsEditing(false);
+      onRefetch();
     } finally {
       setLoading(false);
     }
@@ -325,15 +279,9 @@ const InlineStatCard = ({ stat, onRefetch }: { stat: any, onRefetch: () => void 
   const handleDelete = async () => {
     if (!confirm("Delete this statistic?")) return;
     try {
-      const token = localStorage.getItem("adminToken");
-      const res = await fetch(`/api/stats/admin/${stat._id}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      if (res.ok) {
-        toast.success("Deleted");
-        onRefetch();
-      }
+      await apiDelete(`/stats/admin/${stat._id}`);
+      toast.success("Deleted");
+      onRefetch();
     } catch {}
   };
 
@@ -406,8 +354,7 @@ const StatsSettingsCard = () => {
   const { data: stats, refetch } = useQuery({
     queryKey: ['adminStats'],
     queryFn: async () => {
-      const res = await fetch("/api/stats");
-      const json = await res.json();
+      const json = await apiGet("/stats");
       return json.data;
     }
   });
@@ -417,19 +364,9 @@ const StatsSettingsCard = () => {
   const handleAddNew = async () => {
     setAdding(true);
     try {
-      const token = localStorage.getItem("adminToken");
-      const res = await fetch("/api/stats/admin", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({ value: 0, label: "New Statistic", suffix: "" })
-      });
-      if (res.ok) {
-        toast.success("New stat added!");
-        refetch();
-      }
+      await apiPost("/stats/admin", { value: 0, label: "New Statistic", suffix: "" });
+      toast.success("New stat added!");
+      refetch();
     } finally {
       setAdding(false);
     }
@@ -469,11 +406,7 @@ const ContactMessagesAdmin = () => {
   const { data: messages, refetch, isLoading } = useQuery({
     queryKey: ['adminMessages'],
     queryFn: async () => {
-      const token = localStorage.getItem("adminToken");
-      const res = await fetch("/api/messages/admin", {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      const json = await res.json();
+      const json = await apiGet("/messages/admin");
       return json.data;
     }
   });
@@ -481,33 +414,17 @@ const ContactMessagesAdmin = () => {
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this message?")) return;
     try {
-      const token = localStorage.getItem("adminToken");
-      const res = await fetch(`/api/messages/admin/${id}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      if (res.ok) {
-        toast.success("Message deleted");
-        refetch();
-      }
+      await apiDelete(`/messages/admin/${id}`);
+      toast.success("Message deleted");
+      refetch();
     } catch {}
   };
 
   const handleToggleStatus = async (id: string, currentStatus: string) => {
     try {
-      const token = localStorage.getItem("adminToken");
       const nextStatus = currentStatus === 'unread' ? 'read' : 'unread';
-      const res = await fetch(`/api/messages/admin/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({ status: nextStatus })
-      });
-      if (res.ok) {
-        refetch();
-      }
+      await apiPut(`/messages/admin/${id}`, { status: nextStatus });
+      refetch();
     } catch {}
   };
 
@@ -589,20 +506,10 @@ const InlineFAQCard = ({ faq, onRefetch }: { faq: any, onRefetch: () => void }) 
     if (!formData.question || !formData.answer) return;
     setLoading(true);
     try {
-      const token = localStorage.getItem("adminToken");
-      const res = await fetch(`/api/faqs/admin/${faq._id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify(formData)
-      });
-      if (res.ok) {
-        toast.success("Updated!");
-        setIsEditing(false);
-        onRefetch();
-      }
+      await apiPut(`/faqs/admin/${faq._id}`, formData);
+      toast.success("Updated!");
+      setIsEditing(false);
+      onRefetch();
     } finally {
       setLoading(false);
     }
@@ -611,15 +518,9 @@ const InlineFAQCard = ({ faq, onRefetch }: { faq: any, onRefetch: () => void }) 
   const handleDelete = async () => {
     if (!confirm("Delete this FAQ?")) return;
     try {
-      const token = localStorage.getItem("adminToken");
-      const res = await fetch(`/api/faqs/admin/${faq._id}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      if (res.ok) {
-        toast.success("Deleted");
-        onRefetch();
-      }
+      await apiDelete(`/faqs/admin/${faq._id}`);
+      toast.success("Deleted");
+      onRefetch();
     } catch {}
   };
 
@@ -680,8 +581,7 @@ const FAQsAdmin = () => {
   const { data: faqs, refetch, isLoading } = useQuery({
     queryKey: ['adminFaqs'],
     queryFn: async () => {
-      const res = await fetch("/api/faqs");
-      const json = await res.json();
+      const json = await apiGet("/faqs");
       return json.data;
     }
   });
@@ -691,22 +591,12 @@ const FAQsAdmin = () => {
   const handleAddNew = async () => {
     setAdding(true);
     try {
-      const token = localStorage.getItem("adminToken");
-      const res = await fetch("/api/faqs/admin", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({ 
-          question: "New FAQ Question?", 
-          answer: "Add your helpful answer here." 
-        })
+      await apiPost("/faqs/admin", { 
+        question: "New FAQ Question?", 
+        answer: "Add your helpful answer here." 
       });
-      if (res.ok) {
-        toast.success("New FAQ placeholder added!");
-        refetch();
-      }
+      toast.success("New FAQ placeholder added!");
+      refetch();
     } finally {
       setAdding(false);
     }
@@ -755,8 +645,7 @@ const GalleryAdminCard = () => {
   const { data: images, refetch } = useQuery({
     queryKey: ['adminGalleryImages'],
     queryFn: async () => {
-      const res = await fetch("/api/gallery");
-      const json = await res.json();
+      const json = await apiGet("/gallery");
       return json.data;
     }
   });
@@ -781,14 +670,12 @@ const GalleryAdminCard = () => {
     formData.append("prefixTitle", prefixTitle || category);
 
     try {
-      const token = localStorage.getItem("adminToken");
-      const res = await fetch("/api/gallery/admin/upload", {
+      const response = await apiCall("/gallery/admin/upload", {
         method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
         body: formData
       });
-      const data = await res.json();
-      if (res.ok && data.success) {
+      const data = await response.json();
+      if (response.ok && data.success) {
         toast.success(data.message);
         clearFiles();
         setPrefixTitle("");
@@ -806,15 +693,9 @@ const GalleryAdminCard = () => {
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this image?")) return;
     try {
-      const token = localStorage.getItem("adminToken");
-      const res = await fetch(`/api/gallery/admin/${id}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      if (res.ok) {
-        toast.success("Image deleted");
-        refetch();
-      }
+      await apiDelete(`/gallery/admin/${id}`);
+      toast.success("Image deleted");
+      refetch();
     } catch {
       toast.error("Network error");
     }
@@ -920,10 +801,7 @@ const AdminDashboard = () => {
       }
 
       try {
-        const res = await fetch("/api/auth/verify", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const data = await res.json();
+        const data = await apiGet("/auth/verify");
         if (data.isValid) {
           setAdmin(data.admin);
         } else {
@@ -970,15 +848,13 @@ const AdminDashboard = () => {
     formData.append("media", file);
 
     try {
-      const token = localStorage.getItem("adminToken");
-      const res = await fetch("/api/banner/admin/upload", {
+      const response = await apiCall("/banner/admin/upload", {
         method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
         body: formData
       });
-      const data = await res.json();
+      const data = await response.json();
       
-      if (res.ok && data.success) {
+      if (response.ok && data.success) {
         toast.success("Landing page banner successfully updated!");
         clearFile();
       } else {
@@ -995,13 +871,8 @@ const AdminDashboard = () => {
     if (!confirm("Are you sure you want to permanently delete the live hero banner? This action cannot be undone.")) return;
     
     try {
-      const token = localStorage.getItem("adminToken");
-      const res = await fetch("/api/banner/admin", {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      const data = await res.json();
-      if (res.ok && data.success) {
+      const data = await apiDelete("/banner/admin");
+      if (data.success) {
         toast.success("Banner securely deleted from servers!");
       } else {
         toast.error(data.message || "Failed to delete banner");

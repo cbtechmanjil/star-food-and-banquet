@@ -25,6 +25,7 @@ import cafeInterior2 from "@/assets/cafe-interior-2.png";
 import cafeInterior3 from "@/assets/cafe-interior-3.png";
 
 import { useQuery } from "@tanstack/react-query";
+import { apiGet } from "@/lib/api";
 
 /* ─────────────── Signature Carousel (CSS-driven, infinite, no flicker) ─────────────── */
 
@@ -116,8 +117,7 @@ const Cafe = () => {
   const { data, isLoading } = useQuery({
     queryKey: ['cafeData'],
     queryFn: async () => {
-      const res = await fetch("/api/cafe");
-      const json = await res.json();
+      const json = await apiGet("/cafe");
       return json.data;
     }
   });

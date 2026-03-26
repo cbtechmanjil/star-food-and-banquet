@@ -6,6 +6,7 @@ import {
   Salad, ChefHat, Flame, Sparkles, Leaf, Cherry, 
   IceCreamCone, Coffee, Music, CookingPot
 } from "lucide-react";
+import { apiGet, apiPost, apiPut, apiDelete } from "@/lib/api";
 
 // Icon mapping for Lucide icons
 const iconMap: Record<string, any> = {
@@ -145,8 +146,7 @@ export default function BanquetMenuAdmin() {
   const { data: menus, refetch, isLoading } = useQuery({
     queryKey: ['banquetMenus'],
     queryFn: async () => {
-      const res = await fetch("/api/banquet");
-      const json = await res.json();
+      const json = await apiGet("/banquet");
       return json.data;
     }
   });

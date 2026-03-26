@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { apiPost } from "@/lib/api";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -13,15 +14,9 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      });
+      const data = await apiPost("/auth/login", { username, password });
 
-      const data = await res.json();
-
-      if (res.ok && data.token) {
+      if (data.token) {
         localStorage.setItem("adminToken", data.token);
         toast.success("Login successful!");
         navigate("/admin");

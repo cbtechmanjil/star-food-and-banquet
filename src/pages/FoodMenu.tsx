@@ -8,6 +8,7 @@ import {
   Salad, ChefHat, Flame, CookingPot, IceCreamCone, 
   Coffee, Sparkles, Crown, Gem, Leaf, Music, Cherry, Loader2
 } from "lucide-react";
+import { apiGet } from "@/lib/api";
 
 /* ───────────────────────────── TYPES ───────────────────────────── */
 const iconMap: Record<string, any> = {
@@ -173,8 +174,7 @@ const FoodMenu = () => {
   const { data: menus, isLoading } = useQuery<MenuData[]>({
     queryKey: ['banquetMenus'],
     queryFn: async () => {
-      const res = await fetch("/api/banquet");
-      const json = await res.json();
+      const json = await apiGet("/banquet");
       return json.data;
     }
   });

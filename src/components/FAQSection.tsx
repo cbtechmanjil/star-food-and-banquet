@@ -2,13 +2,13 @@ import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Loader2 } from "lucide-react";
+import { apiGet } from "@/lib/api";
 
 const FAQSection = () => {
   const { data: faqsData, isLoading } = useQuery({
     queryKey: ['faqs'],
     queryFn: async () => {
-      const res = await fetch("/api/faqs");
-      const json = await res.json();
+      const json = await apiGet("/faqs");
       return json.data;
     }
   });

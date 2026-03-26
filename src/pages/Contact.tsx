@@ -5,6 +5,7 @@ import FAQSection from "@/components/FAQSection";
 import { toast } from "sonner";
 import { MapPin, Phone, Mail, Clock, Send, QrCode } from "lucide-react";
 import { useState } from "react";
+import { apiPost } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
 import { useContactSettings } from "@/hooks/use-contact-settings";
 import {
@@ -23,19 +24,11 @@ const Contact = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await fetch("/api/messages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData)
-      });
-      if (res.ok) {
-        toast.success("Thank you! Your message has been sent.");
-        setFormData({ name: "", email: "", phone: "", eventType: "", message: "" });
-      } else {
-        toast.error("Failed to send message. Please try again.");
-      }
+      await apiPost("/messages", formData);
+      toast.success("Thank you! Your message has been sent.");
+      setFormData({ name: "", email: "", phone: "", eventType: "", message: "" });
     } catch (err) {
-      toast.error("Something went wrong. Please try again later.");
+      toast.error("Failed to send message. Please try again.");
     }
   };
 
