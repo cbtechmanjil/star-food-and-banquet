@@ -199,31 +199,24 @@ const InlineMenuItemCard = ({ item, categories, onRefetch }: any) => {
   const handleSave = async () => {
     setSaving(true);
     try {
-      const res = await fetch(`/api/cafe/admin/menu/${item._id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem("adminToken")}` },
-        body: JSON.stringify(edited)
-      });
-      if (res.ok) {
-        toast.success("Item updated");
-        setIsEditing(false);
-        onRefetch();
-      }
+      await apiPut(`/cafe/admin/menu/${item._id}`, edited);
+      toast.success("Item updated");
+      setIsEditing(false);
+      onRefetch();
+    } catch (error) {
+      toast.error("Failed to save item");
     } finally { setSaving(false); }
   };
 
   const handleDelete = async () => {
     if (!confirm("Delete this menu item?")) return;
     try {
-      const res = await fetch(`/api/cafe/admin/menu/${item._id}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${localStorage.getItem("adminToken")}` }
-      });
-      if (res.ok) {
-        toast.success("Deleted");
-        onRefetch();
-      }
-    } catch {}
+      await apiDelete(`/cafe/admin/menu/${item._id}`);
+      toast.success("Deleted");
+      onRefetch();
+    } catch {
+      toast.error("Failed to delete");
+    }
   };
 
   if (isEditing) {

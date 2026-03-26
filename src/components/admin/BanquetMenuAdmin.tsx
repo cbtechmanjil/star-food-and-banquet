@@ -181,17 +181,9 @@ export default function BanquetMenuAdmin() {
   const saveMenuChanges = async (newCategories: any[]) => {
     setSaving(true);
     try {
-      const res = await fetch(`/api/banquet/${activeMenu._id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem("adminToken")}` },
-        body: JSON.stringify({ categories: newCategories })
-      });
-      if (res.ok) {
-        toast.success(`${activeTab} Menu updated`);
-        refetch();
-      } else {
-        toast.error("Failed to save changes");
-      }
+      await apiPut(`/banquet/${activeMenu._id}`, { categories: newCategories });
+      toast.success(`${activeTab} Menu updated`);
+      refetch();
     } catch {
       toast.error("Network error");
     } finally {

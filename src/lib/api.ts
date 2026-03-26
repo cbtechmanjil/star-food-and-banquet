@@ -1,5 +1,18 @@
-// Get the backend URL from environment variables
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://admin.starfoodbanquet.com/api';
+// Get the backend URL - use window.location for production fallback
+const BACKEND_URL = (() => {
+  const envUrl = import.meta.env.VITE_BACKEND_URL;
+  if (envUrl) {
+    return envUrl;
+  }
+  // Fallback for production: use the admin subdomain
+  const hostname = window.location.hostname;
+  if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname.includes(':')) {
+    // Development
+    return 'http://localhost:7001/api';
+  }
+  // Production: construct from hostname
+  return `https://admin.${hostname}/api`;
+})();
 
 /**
  * Constructs the full API URL
@@ -36,6 +49,11 @@ export async function apiCall(
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
     }
+  }
+
+  // Log the request in development for debugging
+  if (import.meta.env.DEV) {
+    console.log('[API Request]', url);
   }
 
   return fetch(url, {
