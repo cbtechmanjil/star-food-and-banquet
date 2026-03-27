@@ -790,6 +790,15 @@ const AdminDashboard = () => {
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
+  // Fetch current banner preview
+  const { data: currentBanner, refetch: refetchBanner } = useQuery({
+    queryKey: ['currentBanner'],
+    queryFn: async () => {
+      const json = await apiGet("/banner/current");
+      return json.data;
+    }
+  });
+  
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -858,6 +867,7 @@ const AdminDashboard = () => {
       if (response.ok && data.success) {
         toast.success("Landing page banner successfully updated!");
         clearFile();
+        refetchBanner();
       } else {
         toast.error(data.message || "Upload failed");
       }
@@ -875,6 +885,7 @@ const AdminDashboard = () => {
       const data = await apiDelete("/banner/admin");
       if (data.success) {
         toast.success("Banner securely deleted from servers!");
+        refetchBanner();
       } else {
         toast.error(data.message || "Failed to delete banner");
       }
@@ -1105,10 +1116,39 @@ const AdminDashboard = () => {
                               <h2 className="text-xl font-bold text-charcoal mb-1">Landing Page Banner</h2>
                               <p className="text-sm text-gray-500">Upload a high-quality video or image for the main hero banner. Max size: 50MB.</p>
                             </div>
-                            <button onClick={handleDeleteBanner} title="Delete live banner" className="flex-shrink-0 text-red-500 hover:bg-red-50 p-2.5 rounded-xl transition-colors border border-red-100 shadow-sm cursor-pointer group">
-                              <Trash2 className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                            </button>
+                            {currentBanner && (
+                              <button onClick={handleDeleteBanner} title="Delete live banner" className="flex-shrink-0 text-red-500 hover:bg-red-50 p-2.5 rounded-xl transition-colors border border-red-100 shadow-sm cursor-pointer group">
+                                <Trash2 className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                              </button>
+                            )}
                           </div>
+
+                          {/* Current Banner Preview */}
+                          {currentBanner && (
+                            <div className="mb-6 pb-6 border-b border-gray-200">
+                              <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-3">Currently Live Banner</label>
+                              <div className="relative rounded-xl overflow-hidden aspect-video bg-gray-100 border border-gray-200 group">
+                                {currentBanner.mediaType === 'video' && currentBanner.useVideoBackground ? (
+                                  <video 
+                                    src={getMinioUrl(currentBanner.mediaUrl)} 
+                                    className="w-full h-full object-cover" 
+                                    controls 
+                                  />
+                                ) : (
+                                  <img 
+                                    src={getMinioUrl(currentBanner.mediaUrl)} 
+                                    alt="Live banner" 
+                                    className="w-full h-full object-cover" 
+                                  />
+                                )}
+                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                                  <span className="text-xs bg-gold/90 text-charcoal px-3 py-1 rounded-full font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
+                                    Click upload below to replace
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          )}
 
                           <div 
                             className="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center hover:bg-gray-50 transition-colors cursor-pointer group"

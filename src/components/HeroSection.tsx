@@ -1,13 +1,61 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import heroBg from "@/assets/hero-banquet.jpg";
+import { apiGet } from "@/lib/api";
+import { getMinioUrl } from "@/lib/minioUrl";
+
+interface Banner {
+  mediaUrl: string;
+  mediaType: 'image' | 'video';
+  useVideoBackground: boolean;
+}
 
 const HeroSection = () => {
+  const [banner, setBanner] = useState<Banner | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBanner = async () => {
+      try {
+        const data = await apiGet("/banner/current");
+        if (data.data) {
+          setBanner(data.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch banner:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBanner();
+  }, []);
+
+  // Determine which background to use
+  const shouldUseVideo = banner?.mediaType === 'video' && banner?.useVideoBackground;
+  const backgroundUrl = banner ? getMinioUrl(banner.mediaUrl) : heroBg;
+
   return (
     <section className="relative min-h-[calc(100vh-100px)] flex items-center justify-center overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0">
-        <img src={heroBg} alt="Luxury banquet hall" className="w-full h-full object-cover" />
+        {shouldUseVideo && banner?.mediaUrl ? (
+          <video 
+            src={backgroundUrl} 
+            autoPlay 
+            loop 
+            muted 
+            playsInline 
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <img 
+            src={backgroundUrl} 
+            alt="Luxury banquet hall" 
+            className="w-full h-full object-cover" 
+          />
+        )}
         {/* Only top shadow — to keep navbar readable. No sides, no bottom. */}
         <div
           className="absolute inset-0"
