@@ -129,7 +129,7 @@ const ContactSettingsCard = () => {
           </div>
           {formData.mapQrCode && (
             <div className="w-24 h-24 bg-white p-2 rounded-xl border border-gray-100 shadow-sm flex-shrink-0">
-              <img src={formData.mapQrCode} alt="Map QR" className="w-full h-full object-contain" />
+              <img src={getMinioUrl(formData.mapQrCode)} alt="Map QR" className="w-full h-full object-contain" />
             </div>
           )}
         </div>

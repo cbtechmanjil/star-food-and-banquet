@@ -15,6 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { getMinioUrl } from "@/lib/minioUrl";
 
 const Contact = () => {
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", eventType: "", message: "" });
@@ -96,7 +97,7 @@ const Contact = () => {
               >
                 <div className="flex-shrink-0">
                   <img
-                    src={contact?.mapQrCode || "/images/qr-code-map.png"}
+                    src={getMinioUrl(contact?.mapQrCode)}
                     alt="QR Code for Map & Directions"
                     className="w-28 h-28 object-contain"
                   />
