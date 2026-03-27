@@ -6,6 +6,7 @@ import {
   Salad, ChefHat, Flame, Sparkles, Leaf, Cherry, 
   IceCreamCone, Coffee, Music, CookingPot
 } from "lucide-react";
+import { apiGet, apiPost, apiPut, apiDelete } from "@/lib/api";
 
 // Icon mapping for Lucide icons
 const iconMap: Record<string, any> = {
@@ -145,8 +146,7 @@ export default function BanquetMenuAdmin() {
   const { data: menus, refetch, isLoading } = useQuery({
     queryKey: ['banquetMenus'],
     queryFn: async () => {
-      const res = await fetch("/api/banquet");
-      const json = await res.json();
+      const json = await apiGet("/banquet");
       return json.data;
     }
   });
@@ -181,17 +181,9 @@ export default function BanquetMenuAdmin() {
   const saveMenuChanges = async (newCategories: any[]) => {
     setSaving(true);
     try {
-      const res = await fetch(`/api/banquet/${activeMenu._id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem("adminToken")}` },
-        body: JSON.stringify({ categories: newCategories })
-      });
-      if (res.ok) {
-        toast.success(`${activeTab} Menu updated`);
-        refetch();
-      } else {
-        toast.error("Failed to save changes");
-      }
+      await apiPut(`/banquet/${activeMenu._id}`, { categories: newCategories });
+      toast.success(`${activeTab} Menu updated`);
+      refetch();
     } catch {
       toast.error("Network error");
     } finally {

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, Quote, Loader2 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import flowerImg from "@/assets/flower-bouquet.png";
+import { apiGet } from "@/lib/api";
 
 
 
@@ -12,8 +13,7 @@ const TestimonialsSection = () => {
   const { data: testimonialsData, isLoading } = useQuery({
     queryKey: ['testimonials'],
     queryFn: async () => {
-      const res = await fetch("/api/testimonials");
-      const json = await res.json();
+      const json = await apiGet("/testimonials");
       return json.data;
     }
   });

@@ -12,7 +12,19 @@ const BanquetMenu = require('./models/BanquetMenu');
 const app = express();
 
 // Middleware
-app.use(cors());
+const corsOptions = {
+  origin: [
+    'https://starfoodbanquet.com',
+    'https://www.starfoodbanquet.com',
+    'https://admin.starfoodbanquet.com',
+    'https://www.admin.starfoodbanquet.com',
+    'http://localhost:7000',
+    'http://localhost:3000',
+  ],
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Routes

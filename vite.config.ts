@@ -7,8 +7,8 @@ import { componentTagger } from "lovable-tagger";
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
 
-  const frontendPort = parseInt(env.VITE_FRONTEND_PORT || "8080");
-  const backendUrl = env.VITE_BACKEND_URL || "http://localhost:3000";
+  const frontendPort = parseInt(env.VITE_FRONTEND_PORT || "7000");
+  const backendUrl = env.VITE_BACKEND_URL || "https://admin.starfoodbanquet.com/api";
 
   return {
     server: {
@@ -23,6 +23,11 @@ export default defineConfig(({ mode }) => {
           changeOrigin: true,
         },
       },
+    },
+    preview: {
+      host: "::",
+      port: frontendPort,
+      allowedHosts: ["starfoodbanquet.com", "www.starfoodbanquet.com", "admin.starfoodbanquet.com", "www.admin.starfoodbanquet.com", "localhost"],
     },
     plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
     resolve: {

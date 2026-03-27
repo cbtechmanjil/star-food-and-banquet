@@ -5,6 +5,8 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ChevronLeft, ChevronRight, X, ZoomIn } from "lucide-react";
 import CTASection from "@/components/CTASection";
+import { apiGet } from "@/lib/api";
+import { getMinioUrl } from "@/lib/minioUrl";
 
 const categories = ["All", "Weddings", "Corporate", "Parties", "Venues"];
 
@@ -21,14 +23,13 @@ const Gallery = () => {
   const { data: serverImages, isLoading } = useQuery({
     queryKey: ['publicGalleryImages'],
     queryFn: async () => {
-      const res = await fetch("/api/gallery");
-      const json = await res.json();
+      const json = await apiGet("/gallery");
       return json.data;
     }
   });
 
   const allImages = serverImages ? serverImages.map((img: any) => ({
-    src: img.url,
+    src: getMinioUrl(img.url),
     category: img.category,
     title: img.title
   })) : [];
