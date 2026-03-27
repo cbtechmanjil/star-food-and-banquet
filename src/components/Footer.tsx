@@ -74,9 +74,6 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-primary-foreground/10 mt-12 pt-8 text-center flex flex-col items-center gap-2">
-          <Link to="/login" className="font-body text-xs text-primary-foreground/60 hover:text-primary transition-colors">
-            Admin Login
-          </Link>
           <p className="font-body text-xs text-primary-foreground/40">
             © {new Date().getFullYear()} Star Food & Banquet. All rights reserved.
           </p>

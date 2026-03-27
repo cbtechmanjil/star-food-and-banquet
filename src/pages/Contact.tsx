@@ -103,7 +103,7 @@ const Contact = () => {
               >
                 <div className="flex-shrink-0">
                   <img
-                    src="/images/qr-code-map.png"
+                    src={contact?.mapQrCode || "/images/qr-code-map.png"}
                     alt="QR Code for Map & Directions"
                     className="w-28 h-28 object-contain"
                   />

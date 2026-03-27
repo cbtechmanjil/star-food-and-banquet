@@ -5,6 +5,7 @@ export interface ContactSettings {
   phone: string;
   email: string;
   workingHours: string;
+  mapQrCode?: string;
 }
 
 export const useContactSettings = () => {
