@@ -71,13 +71,7 @@ const ContactSettingsCard = () => {
     formDataUpload.append("media", file);
 
     try {
-      const token = localStorage.getItem("adminToken");
-      const res = await fetch("/api/settings/admin/contact/qr", {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
-        body: formDataUpload
-      });
-      const json = await res.json();
+      const json = await apiPost("/settings/admin/contact/qr", formDataUpload);
       if (json.success) {
         toast.success("QR Code uploaded!");
         setFormData(prev => ({ ...prev, mapQrCode: json.url }));
