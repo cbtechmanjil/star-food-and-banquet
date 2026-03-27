@@ -38,8 +38,10 @@ interface AdminData {
 }
 
 const ContactSettingsCard = () => {
-  const [formData, setFormData] = useState({ address: "", phone: "", email: "", workingHours: "" });
+  const [formData, setFormData] = useState({ address: "", phone: "", email: "", workingHours: "", mapQrCode: "" });
   const [loading, setLoading] = useState(false);
+  const [uploadingQr, setUploadingQr] = useState(false);
+  
   const { data, refetch } = useQuery({
     queryKey: ['contactSettings'],
     queryFn: async () => {
@@ -54,10 +56,41 @@ const ContactSettingsCard = () => {
         address: data.address || "",
         phone: data.phone || "",
         email: data.email || "",
-        workingHours: data.workingHours || ""
+        workingHours: data.workingHours || "",
+        mapQrCode: data.mapQrCode || ""
       });
     }
   }, [data]);
+
+  const handleQrUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingQr(true);
+    const formDataUpload = new FormData();
+    formDataUpload.append("media", file);
+
+    try {
+      const token = localStorage.getItem("adminToken");
+      const res = await fetch("/api/settings/admin/contact/qr", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body: formDataUpload
+      });
+      const json = await res.json();
+      if (json.success) {
+        toast.success("QR Code uploaded!");
+        setFormData(prev => ({ ...prev, mapQrCode: json.url }));
+        refetch();
+      } else {
+        toast.error(json.message || "Upload failed");
+      }
+    } catch {
+      toast.error("Upload error");
+    } finally {
+      setUploadingQr(false);
+    }
+  };
 
   const handleSave = async () => {
     setLoading(true);
@@ -80,7 +113,33 @@ const ContactSettingsCard = () => {
       <h2 className="text-xl font-bold text-charcoal mb-1">Contact Details</h2>
       <p className="text-sm text-gray-500 mb-6">Update the global contact information displayed across the site.</p>
       
-      <div className="space-y-4 flex-1">
+      <div className="space-y-4 flex-1 text-left">
+        <div className="flex flex-col md:flex-row gap-6 mb-6 p-4 bg-gray-50 rounded-2xl border border-gray-100">
+          <div className="flex-1">
+            <label className="text-xs font-bold text-gray-400 uppercase tracking-widest block mb-2">Map QR Code</label>
+            <p className="text-xs text-gray-500 mb-4">Upload a QR code image that leads to your location map.</p>
+            <input 
+              type="file" 
+              accept="image/*" 
+              onChange={handleQrUpload}
+              className="hidden" 
+              id="qr-upload" 
+            />
+            <label 
+              htmlFor="qr-upload" 
+              className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-xl text-xs font-bold text-charcoal hover:border-gold hover:text-gold cursor-pointer transition-all shadow-sm"
+            >
+              {uploadingQr ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <UploadCloud className="w-3.5 h-3.5" />}
+              {uploadingQr ? "Uploading..." : "Change QR Image"}
+            </label>
+          </div>
+          {formData.mapQrCode && (
+            <div className="w-24 h-24 bg-white p-2 rounded-xl border border-gray-100 shadow-sm flex-shrink-0">
+              <img src={formData.mapQrCode} alt="Map QR" className="w-full h-full object-contain" />
+            </div>
+          )}
+        </div>
+
         <div>
           <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Address</label>
           <input type="text" value={formData.address} onChange={e => setFormData({...formData, address: e.target.value})} className="w-full p-3 border border-gray-200 rounded-xl mt-1 text-sm focus:ring-2 focus:ring-gold/50 focus:border-gold outline-none transition-all" />

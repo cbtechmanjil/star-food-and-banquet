@@ -131,11 +131,37 @@ const uploadCafeMedia = async (file) => {
   }
 };
 
+const uploadSettingsMedia = async (file) => {
+  const bucketName = process.env.MINIO_BUCKET || 'star-food-assets';
+  const ext = path.extname(file.originalname);
+  const uniqueName = crypto.randomBytes(16).toString('hex') + ext;
+  const objectName = `settings/${uniqueName}`;
+
+  try {
+    await minioClient.putObject(
+      bucketName, 
+      objectName, 
+      file.buffer, 
+      file.size, 
+      { 'Content-Type': file.mimetype }
+    );
+
+    const protocol = process.env.MINIO_USE_SSL === 'true' ? 'https' : 'http';
+    const endpoint = process.env.MINIO_ENDPOINT || 'localhost';
+    const port = process.env.MINIO_PORT || '9000';
+    
+    return `${protocol}://${endpoint}:${port}/${bucketName}/${objectName}`;
+  } catch (error) {
+    throw new Error(`MinIO Settings Upload Failed: ${error.message}`);
+  }
+};
+
 module.exports = {
   minioClient,
   initializeMinio,
   uploadBannerMedia,
   uploadGalleryMedia,
   deleteMedia,
-  uploadCafeMedia
+  uploadCafeMedia,
+  uploadSettingsMedia
 };
