@@ -84,7 +84,7 @@ export async function apiGet(endpoint: string) {
 export async function apiPost(endpoint: string, data?: any) {
   const response = await apiCall(endpoint, {
     method: 'POST',
-    body: data ? JSON.stringify(data) : undefined,
+    body: data instanceof FormData ? data : (data ? JSON.stringify(data) : undefined),
   });
   if (!response.ok) {
     throw new Error(`API error: ${response.status}`);
@@ -98,7 +98,7 @@ export async function apiPost(endpoint: string, data?: any) {
 export async function apiPut(endpoint: string, data?: any) {
   const response = await apiCall(endpoint, {
     method: 'PUT',
-    body: data ? JSON.stringify(data) : undefined,
+    body: data instanceof FormData ? data : (data ? JSON.stringify(data) : undefined),
   });
   if (!response.ok) {
     throw new Error(`API error: ${response.status}`);

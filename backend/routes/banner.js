@@ -31,20 +31,29 @@ router.post('/admin/upload', protectAdmin, (req, res, next) => {
 
     // Upsert the BannerConfig
     let config = await BannerConfig.findOne();
+    const bannerData = {
+      mediaUrl: fileUrl,
+      mediaType,
+      useVideoBackground: isVideo,
+      // Optional: Update text if provided during upload
+      slogan: req.body.slogan,
+      title: req.body.title,
+      subtitle: req.body.subtitle
+    };
+
+    // Remove undefined fields to avoid overwriting with null
+    Object.keys(bannerData).forEach(key => 
+      bannerData[key] === undefined && delete bannerData[key]
+    );
+
     if (config) {
       if (config.mediaUrl) {
          try { await deleteMedia(config.mediaUrl); } catch(e) {}
       }
-      config.mediaUrl = fileUrl;
-      config.mediaType = mediaType;
-      config.useVideoBackground = isVideo; // Auto-toggle to what was just uploaded
+      Object.assign(config, bannerData);
       await config.save();
     } else {
-      config = await BannerConfig.create({
-        mediaUrl: fileUrl,
-        mediaType,
-        useVideoBackground: isVideo
-      });
+      config = await BannerConfig.create(bannerData);
     }
 
     res.json({
@@ -89,6 +98,33 @@ router.put('/admin/toggle', protectAdmin, async (req, res) => {
   }
 });
 
+// @route   PUT /api/banner/admin/content
+// @desc    Update only the text content of the banner
+router.put('/admin/content', protectAdmin, async (req, res) => {
+  try {
+    const { slogan, title, subtitle } = req.body;
+    let config = await BannerConfig.findOne();
+    
+    if (!config) {
+      // If no config exists, we create one but it will have no mediaUrl yet
+      // This is unlikely but handled
+      config = new BannerConfig({
+        mediaUrl: "pending", // placeholder or empty
+        mediaType: "image"
+      });
+    }
+
+    if (slogan !== undefined) config.slogan = slogan;
+    if (title !== undefined) config.title = title;
+    if (subtitle !== undefined) config.subtitle = subtitle;
+
+    await config.save();
+    res.json({ success: true, message: 'Banner content updated', data: config });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server Error' });
+  }
+});
+
 // @route   DELETE /api/banner/admin
 // @desc    Delete the current banner configuration and media
 router.delete('/admin', protectAdmin, async (req, res) => {
@@ -97,7 +133,7 @@ router.delete('/admin', protectAdmin, async (req, res) => {
     if (!config) {
       return res.status(404).json({ success: false, message: 'No banner to delete' });
     }
-    if (config.mediaUrl) {
+    if (config.mediaUrl && config.mediaUrl !== "pending") {
       await deleteMedia(config.mediaUrl);
     }
     await BannerConfig.deleteMany();

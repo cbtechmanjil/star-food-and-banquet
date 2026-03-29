@@ -7,6 +7,8 @@ const seedTestimonials = require('./seedTestimonials');
 const seedStats = require('./seedStats');
 const seedFaqs = require('./seedFaqs');
 const seedBanquet = require('./seedBanquet');
+const seedBlog = require('./seedBlog');
+const seedAdmin = require('./seedAdmin');
 const BanquetMenu = require('./models/BanquetMenu');
 
 const app = express();
@@ -38,11 +40,16 @@ app.use('/api/stats', require('./routes/stats'));
 app.use('/api/messages', require('./routes/contactMessages'));
 app.use('/api/messages', require('./routes/contactMessages'));
 app.use('/api/faqs', require('./routes/faqs'));
+app.use('/api/blog', require('./routes/blog'));
 
 app.use('/api/banquet', require('./routes/banquet'));
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Backend is running' });
+});
+
+app.get('/', (req, res) => {
+  res.send('Star Banquet API Server is running. Access the frontend on port 7000 or 7002.');
 });
 
 // Initialize Backend
@@ -57,6 +64,8 @@ const startServer = async () => {
     await seedStats();
     await seedFaqs();
     await seedBanquet();
+    await seedBlog();
+    await seedAdmin();
 
     // Initialize MinIO Bucket
     const { initializeMinio } = require('./minioClient');

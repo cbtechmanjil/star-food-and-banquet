@@ -16,6 +16,9 @@ import {
   Leaf
 } from "lucide-react";
 import { useContactSettings } from "@/hooks/use-contact-settings";
+import PageSEO from "@/components/PageSEO";
+import { PAGE_META } from "@/lib/seo";
+
 
 import cafeHero from "@/assets/cafe-hero.png";
 import cafeSmoothie from "@/assets/cafe-smoothie.png";
@@ -163,6 +166,11 @@ const Cafe = () => {
 
   return (
     <div className="min-h-screen">
+      <PageSEO
+        title={PAGE_META.cafe.title}
+        description={PAGE_META.cafe.description}
+        canonical={PAGE_META.cafe.canonical}
+      />
       <Navbar />
 
       {/* ══════════ HERO ══════════ */}

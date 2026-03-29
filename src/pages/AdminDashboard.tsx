@@ -25,11 +25,15 @@ import {
   X,
   Coffee,
   Plus,
-  ChefHat
+  ChefHat,
+  Zap,
+  Utensils,
+  FileText
 } from "lucide-react";
 
 import CafeAdmin from "@/components/admin/CafeAdmin";
 import BanquetMenuAdmin from "@/components/admin/BanquetMenuAdmin";
+import BlogAdmin from "@/components/admin/BlogAdmin";
 import { apiGet, apiPost, apiPut, apiDelete, apiCall } from "@/lib/api";
 import { getMinioUrl } from "@/lib/minioUrl";
 
@@ -456,14 +460,7 @@ const StatsSettingsCard = () => {
   );
 };
 
-const ContactMessagesAdmin = () => {
-  const { data: messages, refetch, isLoading } = useQuery({
-    queryKey: ['adminMessages'],
-    queryFn: async () => {
-      const json = await apiGet("/messages/admin");
-      return json.data;
-    }
-  });
+const ContactMessagesAdmin = ({ messages, refetch, isLoading }: { messages: any[], refetch: () => void, isLoading: boolean }) => {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this message?")) return;
@@ -502,6 +499,11 @@ const ContactMessagesAdmin = () => {
                   <span className={`w-2 h-2 rounded-full ${msg.status === 'unread' ? 'bg-gold' : 'bg-gray-300'}`} />
                   <h3 className="font-bold text-charcoal">{msg.name}</h3>
                   <span className="text-[10px] bg-white px-2 py-0.5 rounded-full border border-gray-100 text-gray-400 font-bold uppercase tracking-widest">{msg.eventType}</span>
+                  {msg.pax && (
+                    <span className="text-[10px] bg-gold/10 px-2 py-0.5 rounded-full border border-gold/20 text-gold font-bold uppercase tracking-widest flex items-center gap-1">
+                      <Users className="w-2.5 h-2.5" /> Pax: {msg.pax}
+                    </span>
+                  )}
                   <span className="text-[10px] text-gray-400 ml-auto">{new Date(msg.createdAt).toLocaleString()}</span>
                 </div>
                 
@@ -851,6 +853,77 @@ const AdminDashboard = () => {
       return json.data;
     }
   });
+
+  // Lifted Messages Query for Notifications
+  const { data: messages, refetch: refetchMessages, isLoading: messagesLoading } = useQuery({
+    queryKey: ['adminMessages'],
+    queryFn: async () => {
+      const json = await apiGet("/messages/admin");
+      return json.data;
+    }
+  });
+
+  const [showNotifications, setShowNotifications] = useState(false);
+  const unreadMessages = messages?.filter((m: any) => m.status === 'unread') || [];
+  const notificationRef = useRef<HTMLDivElement>(null);
+
+  // Close notifications on click outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
+        setShowNotifications(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleNotificationClick = async (msgId: string) => {
+    try {
+      await apiPut(`/messages/admin/${msgId}`, { status: 'read' });
+      refetchMessages();
+      setActiveTab("Contact Us");
+      setShowNotifications(false);
+      toast.success("Opening inquiry...");
+    } catch (err) {
+      toast.error("Failed to update message status");
+    }
+  };
+
+  // Banner Content State
+  const [bannerContent, setBannerContent] = useState({
+    slogan: "",
+    title: "",
+    subtitle: ""
+  });
+  const [updatingContent, setUpdatingContent] = useState(false);
+
+  useEffect(() => {
+    if (currentBanner) {
+      setBannerContent({
+        slogan: currentBanner.slogan || "",
+        title: currentBanner.title || "",
+        subtitle: currentBanner.subtitle || ""
+      });
+    }
+  }, [currentBanner]);
+
+  const handleUpdateContent = async () => {
+    setUpdatingContent(true);
+    try {
+      const json = await apiPut("/banner/admin/content", bannerContent);
+      if (json.success) {
+        toast.success("Banner text content updated!");
+        refetchBanner();
+      } else {
+        toast.error("Failed to update banner content");
+      }
+    } catch {
+      toast.error("Network error");
+    } finally {
+      setUpdatingContent(false);
+    }
+  };
   
   const navigate = useNavigate();
 
@@ -909,6 +982,10 @@ const AdminDashboard = () => {
     setUploading(true);
     const formData = new FormData();
     formData.append("media", file);
+    // Also include text content in upload
+    if (bannerContent.slogan) formData.append("slogan", bannerContent.slogan);
+    if (bannerContent.title) formData.append("title", bannerContent.title);
+    if (bannerContent.subtitle) formData.append("subtitle", bannerContent.subtitle);
 
     try {
       const response = await apiCall("/banner/admin/upload", {
@@ -959,6 +1036,7 @@ const AdminDashboard = () => {
     { icon: CalendarDays, label: "Bookings" },
     { icon: Mail, label: "Contact Us" },
     { icon: HelpCircle, label: "FAQs" },
+    { icon: FileText, label: "Blogs" },
     { icon: Settings, label: "Settings" },
   ];
 
@@ -1047,10 +1125,66 @@ const AdminDashboard = () => {
           </div>
           
           <div className="flex items-center gap-6">
-            <button className="relative p-2 text-gray-400 hover:text-charcoal transition-colors">
-              <Bell className="h-5 w-5" />
-              <span className="absolute top-1.5 right-1.5 h-2 w-2 bg-gold rounded-full ring-2 ring-white"></span>
-            </button>
+            <div className="relative" ref={notificationRef}>
+              <button 
+                onClick={() => setShowNotifications(!showNotifications)}
+                className={`relative p-2 rounded-xl transition-all ${showNotifications ? 'bg-gold/10 text-gold' : 'text-gray-400 hover:text-charcoal hover:bg-gray-50'}`}
+              >
+                <Bell className="h-5 w-5" />
+                {unreadMessages.length > 0 && (
+                  <span className="absolute top-1.5 right-1.5 h-4 w-4 bg-red-500 text-white text-[10px] font-bold rounded-full ring-2 ring-white flex items-center justify-center">
+                    {unreadMessages.length > 9 ? '9+' : unreadMessages.length}
+                  </span>
+                )}
+              </button>
+
+              {/* Notification Dropdown */}
+              {showNotifications && (
+                <div className="absolute right-0 mt-3 w-80 bg-white border border-gray-100 rounded-2xl shadow-xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                  <div className="p-4 border-b border-gray-50 bg-gray-50/50 flex justify-between items-center">
+                    <h3 className="font-bold text-charcoal text-sm">Notifications</h3>
+                    <span className="text-[10px] bg-gold/20 text-gold px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
+                      {unreadMessages.length} New
+                    </span>
+                  </div>
+                  <div className="max-h-[400px] overflow-y-auto custom-scrollbar">
+                    {unreadMessages.length > 0 ? (
+                      unreadMessages.slice(0, 5).map((msg: any) => (
+                        <button 
+                          key={msg._id}
+                          onClick={() => handleNotificationClick(msg._id)}
+                          className="w-full p-4 border-b border-gray-50 flex gap-3 hover:bg-gray-50 transition-colors text-left group"
+                        >
+                          <div className="h-10 w-10 bg-gold/10 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-gold/20 transition-colors">
+                            <Mail className="w-5 h-5 text-gold" />
+                          </div>
+                          <div className="flex-1 overflow-hidden">
+                            <p className="text-sm font-bold text-charcoal truncate">{msg.name}</p>
+                            <p className="text-xs text-gray-500 truncate mb-1">{msg.eventType}</p>
+                            <p className="text-[10px] text-gray-400 font-medium">
+                              {new Date(msg.createdAt).toLocaleDateString()} at {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            </p>
+                          </div>
+                        </button>
+                      ))
+                    ) : (
+                      <div className="p-10 text-center">
+                        <Star className="w-10 h-10 text-gray-100 mx-auto mb-3" />
+                        <p className="text-sm text-gray-400 font-medium">All caught up!</p>
+                      </div>
+                    )}
+                  </div>
+                  {unreadMessages.length > 0 && (
+                    <button 
+                      onClick={() => { setActiveTab("Contact Us"); setShowNotifications(false); }}
+                      className="w-full p-3 text-[11px] font-bold text-gray-400 hover:text-gold hover:bg-gray-50 transition-all uppercase tracking-widest bg-white"
+                    >
+                      View All Inquiries
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
             <div className="flex items-center gap-3 pl-6 border-l border-gray-200">
               <div className="h-9 w-9 bg-charcoal rounded-full flex items-center justify-center shadow-inner shrink-0">
                 <span className="text-gold font-bold text-sm">{admin.username.charAt(0).toUpperCase()}</span>
@@ -1080,9 +1214,9 @@ const AdminDashboard = () => {
                       {/* Stats Grid */}
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         {[
-                          { label: "Total Revenue", value: "$45,231", trend: "+12.5%", color: "text-green-500" },
+                          { label: "Total Revenue", value: " रू 1.2M", trend: "+12.5%", color: "text-green-500" },
                           { label: "Active Bookings", value: "32", trend: "+4.2%", color: "text-green-500" },
-                          { label: "Pending Inquiries", value: "14", trend: "-2.1%", color: "text-red-500" },
+                          { label: "Pending Inquiries", value: unreadMessages.length.toString(), trend: unreadMessages.length > 0 ? "New" : "0", color: unreadMessages.length > 0 ? "text-amber-500" : "text-gray-400" },
                           { label: "Customer Satisfaction", value: "4.9/5", trend: "+0.1%", color: "text-green-500" },
                         ].map((stat, i) => (
                           <div key={i} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md hover:border-gold/30 transition-all group">
@@ -1095,6 +1229,35 @@ const AdminDashboard = () => {
                             </div>
                           </div>
                         ))}
+                      </div>
+
+                      {/* Quick Steps / Actions */}
+                      <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm overflow-hidden relative group">
+                        <div className="flex items-center gap-3 mb-6">
+                          <div className="p-2 bg-amber-50 rounded-lg">
+                            <Zap className="w-5 h-5 text-amber-500" />
+                          </div>
+                          <h2 className="font-bold text-charcoal">Quick Steps</h2>
+                        </div>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                          {[
+                            { label: "Update Banner", icon: Settings, tab: "Settings", color: "text-blue-500", bg: "bg-blue-50" },
+                            { label: "Manage Menu", icon: Utensils, tab: "Food Menu", color: "text-green-500", bg: "bg-green-50" },
+                            { label: "Check Inquiries", icon: Mail, tab: "Contact Us", color: "text-amber-500", bg: "bg-amber-50" },
+                            { label: "Upload Gallery", icon: ImageIcon, tab: "Gallery", color: "text-purple-500", bg: "bg-purple-50" },
+                          ].map((action) => (
+                            <button
+                              key={action.label}
+                              onClick={() => setActiveTab(action.tab)}
+                              className="flex flex-col items-center gap-3 p-4 rounded-xl border border-transparent hover:border-gold/20 hover:bg-gray-50 transition-all group/btn"
+                            >
+                              <div className={`w-12 h-12 ${action.bg} ${action.color} rounded-2xl flex items-center justify-center group-hover/btn:scale-110 transition-transform shadow-sm`}>
+                                <action.icon className="w-6 h-6" />
+                              </div>
+                              <span className="text-xs font-bold text-gray-500 group-hover/btn:text-charcoal uppercase tracking-wider">{action.label}</span>
+                            </button>
+                          ))}
+                        </div>
                       </div>
 
                       {/* Main Panels */}
@@ -1146,10 +1309,18 @@ const AdminDashboard = () => {
                   return <CafeAdmin />;
                 case "Food Menu":
                   return <BanquetMenuAdmin />;
+                case "Blogs":
+                  return <BlogAdmin />;
                 case "Bookings":
                   return <div className="bg-white p-12 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center justify-center text-center"><CalendarDays className="h-16 w-16 text-gray-200 mb-4" /><h2 className="text-xl font-bold text-charcoal mb-2">Bookings Module</h2><p className="text-gray-500 max-w-sm">This module is currently under development.</p></div>;
                 case "Contact Us":
-                  return <ContactMessagesAdmin />;
+                  return (
+                    <ContactMessagesAdmin 
+                      messages={messages || []} 
+                      refetch={refetchMessages} 
+                      isLoading={messagesLoading} 
+                    />
+                  );
                 case "FAQs":
                   return <FAQsAdmin />;
                 case "Settings":
@@ -1176,87 +1347,144 @@ const AdminDashboard = () => {
                             )}
                           </div>
 
-                          {/* Current Banner Preview */}
-                          {currentBanner && (
-                            <div className="mb-6 pb-6 border-b border-gray-200">
-                              <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-3">Currently Live Banner</label>
-                              <div className="relative rounded-xl overflow-hidden aspect-video bg-gray-100 border border-gray-200 group">
-                                {currentBanner.mediaType === 'video' && currentBanner.useVideoBackground ? (
-                                  <video 
-                                    src={getMinioUrl(currentBanner.mediaUrl)} 
-                                    className="w-full h-full object-cover" 
-                                    controls 
-                                  />
-                                ) : (
-                                  <img 
-                                    src={getMinioUrl(currentBanner.mediaUrl)} 
-                                    alt="Live banner" 
-                                    className="w-full h-full object-cover" 
-                                  />
-                                )}
-                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
-                                  <span className="text-xs bg-gold/90 text-charcoal px-3 py-1 rounded-full font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
-                                    Click upload below to replace
-                                  </span>
-                                </div>
-                              </div>
+                          {/* Banner Text Content Inputs */}
+                          <div className="space-y-4 mb-8">
+                            <div>
+                              <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-1.5">Slogan</label>
+                              <input 
+                                type="text" 
+                                value={bannerContent.slogan} 
+                                onChange={e => setBannerContent({...bannerContent, slogan: e.target.value})}
+                                placeholder="e.g. Premium Event Management & Banquet Services"
+                                className="w-full p-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-gold/50 focus:border-gold outline-none transition-all"
+                              />
                             </div>
-                          )}
+                            <div>
+                              <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-1.5 flex justify-between">
+                                Title
+                                <span className="text-[10px] lowercase font-normal italic text-gray-400">Use '-' to highlight a word (e.g. Dream - Weddings)</span>
+                              </label>
+                              <input 
+                                type="text" 
+                                value={bannerContent.title} 
+                                onChange={e => setBannerContent({...bannerContent, title: e.target.value})}
+                                placeholder="e.g. Crafting Unforgettable - Celebrations"
+                                className="w-full p-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-gold/50 focus:border-gold outline-none transition-all font-medium"
+                              />
+                            </div>
+                            <div>
+                              <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-1.5">Subtitle</label>
+                              <textarea 
+                                rows={3}
+                                value={bannerContent.subtitle} 
+                                onChange={e => setBannerContent({...bannerContent, subtitle: e.target.value})}
+                                placeholder="Enter description paragraph..."
+                                className="w-full p-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-gold/50 focus:border-gold outline-none transition-all leading-relaxed"
+                              />
+                            </div>
+                            <button 
+                              onClick={handleUpdateContent}
+                              disabled={updatingContent}
+                              className="text-xs font-bold text-gold hover:text-gold/80 flex items-center gap-2 transition-all"
+                            >
+                              {updatingContent ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Settings className="w-3.5 h-3.5" />}
+                              Save Text Changes Only
+                            </button>
+                          </div>
 
-                          <div 
-                            className="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center hover:bg-gray-50 transition-colors cursor-pointer group"
-                            onClick={() => !file && fileInputRef.current?.click()}
-                          >
-                            <input 
-                              type="file" 
-                              ref={fileInputRef} 
-                              onChange={handleFileChange} 
-                              className="hidden" 
-                              accept="image/jpeg,image/png,image/webp,video/mp4,video/quicktime"
-                            />
+                          <div className="bg-gray-50 p-6 rounded-2xl border border-gray-100">
+                            <label className="text-xs font-bold text-charcoal uppercase tracking-widest block mb-4">Update Media</label>
                             
-                            {file ? (
-                              <div className="flex flex-col items-center gap-3">
-                                {file.type.startsWith("video") ? (
-                                  <FileVideo className="h-12 w-12 text-gold" />
-                                ) : (
-                                  <ImageIcon className="h-12 w-12 text-gold" />
-                                )}
-                                <div className="text-center">
-                                  <p className="font-medium text-charcoal">{file.name}</p>
-                                  <p className="text-xs text-gray-400 mt-1">{(file.size / (1024 * 1024)).toFixed(2)} MB</p>
+                            {/* Current Banner Preview */}
+                            {currentBanner && currentBanner.mediaUrl !== "pending" && (
+                              <div className="mb-6 pb-6 border-b border-gray-200">
+                                <div className="flex justify-between items-center mb-3">
+                                  <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block">Currently Live Media</label>
+                                  <button 
+                                    onClick={handleDeleteBanner}
+                                    className="text-xs font-bold text-red-500 hover:text-red-700 flex items-center gap-1.5 transition-colors"
+                                  >
+                                    <Trash2 className="w-3.5 h-3.5" /> Remove Media
+                                  </button>
                                 </div>
-                                <button 
-                                  onClick={(e) => { e.stopPropagation(); clearFile(); }}
-                                  className="mt-2 text-sm text-red-500 hover:text-red-600 flex items-center gap-1"
-                                >
-                                  <X className="h-4 w-4" /> Clear Selection
-                                </button>
-                              </div>
-                            ) : (
-                              <div className="flex flex-col items-center gap-3">
-                                <UploadCloud className="h-12 w-12 text-gray-300 group-hover:text-gold transition-colors" />
-                                <div>
-                                  <p className="font-medium text-charcoal">Click to upload banner image/video</p>
-                                  <p className="text-xs text-gray-400 mt-1">JPEG, PNG, WEBP, MP4 or MOV</p>
+                                <div className="relative rounded-xl overflow-hidden aspect-video bg-gray-100 border border-gray-200 group">
+                                  {currentBanner.mediaType === 'video' && currentBanner.useVideoBackground ? (
+                                    <video 
+                                      src={getMinioUrl(currentBanner.mediaUrl)} 
+                                      className="w-full h-full object-cover" 
+                                      controls 
+                                    />
+                                  ) : (
+                                    <img 
+                                      src={getMinioUrl(currentBanner.mediaUrl)} 
+                                      alt="Live banner" 
+                                      className="w-full h-full object-cover" 
+                                    />
+                                  )}
+                                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                                    <span className="text-xs bg-gold/90 text-charcoal px-3 py-1 rounded-full font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
+                                      Click upload below to replace
+                                    </span>
+                                  </div>
                                 </div>
                               </div>
                             )}
-                          </div>
 
-                          <button 
-                            onClick={handleUpload}
-                            disabled={!file || uploading}
-                            className={`w-full mt-6 py-3 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all ${
-                              !file 
-                                ? "bg-gray-100 text-gray-400 cursor-not-allowed" 
-                                : uploading
-                                ? "bg-gold/80 text-charcoal cursor-wait"
-                                : "bg-gold text-charcoal hover:shadow-lg hover:shadow-gold/20 hover:-translate-y-0.5"
-                            }`}
-                          >
-                            {uploading ? "Uploading..." : "Upload Banner"}
-                          </button>
+                            <div 
+                              className="border-2 border-dashed border-gray-300 bg-white rounded-xl p-8 text-center hover:bg-white/80 transition-colors cursor-pointer group"
+                              onClick={() => !file && fileInputRef.current?.click()}
+                            >
+                              <input 
+                                type="file" 
+                                ref={fileInputRef} 
+                                onChange={handleFileChange} 
+                                className="hidden" 
+                                accept="image/jpeg,image/png,image/webp,video/mp4,video/quicktime"
+                              />
+                              
+                              {file ? (
+                                <div className="flex flex-col items-center gap-3">
+                                  {file.type.startsWith("video") ? (
+                                    <FileVideo className="h-10 w-10 text-gold" />
+                                  ) : (
+                                    <ImageIcon className="h-10 w-10 text-gold" />
+                                  )}
+                                  <div className="text-center">
+                                    <p className="font-medium text-charcoal text-sm">{file.name}</p>
+                                    <p className="text-[10px] text-gray-400 mt-1">{(file.size / (1024 * 1024)).toFixed(2)} MB</p>
+                                  </div>
+                                  <button 
+                                    onClick={(e) => { e.stopPropagation(); clearFile(); }}
+                                    className="mt-1 text-[11px] text-red-500 hover:text-red-600 flex items-center gap-1 font-bold"
+                                  >
+                                    <X className="h-3.5 h-3.5" /> Clear Selection
+                                  </button>
+                                </div>
+                              ) : (
+                                <div className="flex flex-col items-center gap-3">
+                                  <UploadCloud className="h-10 w-10 text-gray-300 group-hover:text-gold transition-colors" />
+                                  <div>
+                                    <p className="text-sm font-medium text-charcoal">Click to upload banner image/video</p>
+                                    <p className="text-[10px] text-gray-400 mt-1">JPEG, PNG, WEBP, MP4 or MOV (Max 50MB)</p>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+
+                            <button 
+                              onClick={handleUpload}
+                              disabled={!file || uploading}
+                              className={`w-full mt-4 py-3 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all ${
+                                !file 
+                                  ? "bg-gray-200 text-gray-400 cursor-not-allowed" 
+                                  : uploading
+                                  ? "bg-gold/80 text-charcoal cursor-wait"
+                                  : "bg-gold text-charcoal hover:shadow-lg hover:shadow-gold/20"
+                              }`}
+                            >
+                              {uploading ? "Uploading..." : "Upload New Media"}
+                            </button>
+                          </div>
                         </div>
                         
                         <ContactSettingsCard />
@@ -1271,7 +1499,7 @@ const AdminDashboard = () => {
             })()}
 
             {/* Empty State for other tabs */}
-            {!["Dashboard", "Settings", "Gallery", "Cafe", "Food Menu", "Contact Us", "FAQs", "Bookings"].includes(activeTab) && (
+            {!["Dashboard", "Settings", "Gallery", "Cafe", "Food Menu", "Contact Us", "FAQs", "Bookings", "Blogs"].includes(activeTab) && (
               <div className="bg-white p-12 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center justify-center text-center">
                 <LayoutDashboard className="h-16 w-16 text-gray-200 mb-4" />
                 <h2 className="text-xl font-bold text-charcoal mb-2">{activeTab} Module</h2>

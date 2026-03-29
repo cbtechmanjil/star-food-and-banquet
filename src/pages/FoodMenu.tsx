@@ -9,6 +9,8 @@ import {
   Coffee, Sparkles, Crown, Gem, Leaf, Music, Cherry, Loader2
 } from "lucide-react";
 import { apiGet } from "@/lib/api";
+import PageSEO from "@/components/PageSEO";
+import { PAGE_META } from "@/lib/seo";
 
 /* ───────────────────────────── TYPES ───────────────────────────── */
 const iconMap: Record<string, any> = {
@@ -191,6 +193,11 @@ const FoodMenu = () => {
 
   return (
     <div className="min-h-screen">
+      <PageSEO
+        title={PAGE_META.foodMenu.title}
+        description={PAGE_META.foodMenu.description}
+        canonical={PAGE_META.foodMenu.canonical}
+      />
       <Navbar />
 
       {/* Hero */}

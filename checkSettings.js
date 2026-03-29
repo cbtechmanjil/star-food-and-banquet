@@ -1,0 +1,1 @@
+const mongoose = require('mongoose'); const ContactSettings = require('./models/ContactSettings'); require('dotenv').config(); mongoose.connect(process.env.MONGODB_URI).then(async () => { const s = await ContactSettings.findOne(); console.log(JSON.stringify(s, null, 2)); process.exit(0); }).catch(err => { console.error(err); process.exit(1); });

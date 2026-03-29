@@ -16,7 +16,7 @@ const AboutSection = () => {
             transition={{ duration: 0.8 }}
             className="relative"
           >
-            <img src={aboutImg} alt="Elegant venue setup" className="w-full h-full object-cover min-h-[400px]" />
+            <img src={aboutImg} alt="Elegant banquet hall venue setup at Star Banquet Pepsicola, Kathmandu" className="w-full h-full object-cover min-h-[400px]" loading="lazy" />
           </motion.div>
 
           {/* Content */}
@@ -34,14 +34,15 @@ const AboutSection = () => {
               viewport={{ once: true }}
               transition={{ duration: 1, delay: 0.4 }}
               src={aboutFlowerImg} 
-              alt="Decorative flower" 
+              alt="" 
               className="absolute top-0 right-0 w-32 md:w-48 opacity-70 pointer-events-none" 
+              aria-hidden="true"
             />
             <div className="w-12 h-0.5 bg-primary mb-6" />
             <h2 className="section-title mb-3">About Us</h2>
             <p className="section-subtitle mb-8">Discover Our Story</p>
             <p className="font-body text-muted-foreground leading-relaxed mb-8">
-              Welcome to Star Food and Banquet, the perfect destination where delightful dining meets unforgettable celebrations. Located in the heart of the city, Star Food and Banquet is a family-friendly restaurant and event space that brings people together through great food, warm hospitality, and joyful experiences.
+              Welcome to Star Food and Banquet Pepsicola, one of the most trusted destinations for banquet services, wedding venues, and event spaces in Kathmandu. Conveniently located in Pepsicola, we offer the perfect blend of delicious dining, elegant ambiance, and exceptional hospitality for both everyday meals and special occasions.
             </p>
             <Link
               to="/about"

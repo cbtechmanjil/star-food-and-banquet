@@ -13,6 +13,8 @@ import Cafe from "./pages/Cafe";
 import Events from "./pages/Events";
 import Gallery from "./pages/Gallery";
 import Contact from "./pages/Contact";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -30,6 +32,8 @@ const routeTitles: Record<string, string> = {
   "/events": "Events",
   "/gallery": "Gallery",
   "/contact": "Contact",
+  "/blog": "Blog & Tips",
+  "/blog/:slug": "Post Detail",
   "/login": "Admin Login",
   "/admin": "Admin Dashboard",
 };
@@ -52,6 +56,8 @@ function AnimatedRoutes() {
         <Route path="/events" element={<PageTransitionLayout title={pageTitle}><Events /></PageTransitionLayout>} />
         <Route path="/gallery" element={<PageTransitionLayout title={pageTitle}><Gallery /></PageTransitionLayout>} />
         <Route path="/contact" element={<PageTransitionLayout title={pageTitle}><Contact /></PageTransitionLayout>} />
+        <Route path="/blog" element={<PageTransitionLayout title={pageTitle}><Blog /></PageTransitionLayout>} />
+        <Route path="/blog/:slug" element={<PageTransitionLayout title={pageTitle}><BlogPost /></PageTransitionLayout>} />
         <Route path="/login" element={<Login />} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="*" element={<NotFound />} />

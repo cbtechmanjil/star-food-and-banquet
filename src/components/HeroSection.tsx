@@ -9,6 +9,9 @@ interface Banner {
   mediaUrl: string;
   mediaType: 'image' | 'video';
   useVideoBackground: boolean;
+  slogan?: string;
+  title?: string;
+  subtitle?: string;
 }
 
 const HeroSection = () => {
@@ -34,13 +37,23 @@ const HeroSection = () => {
 
   // Determine which background to use
   const shouldUseVideo = banner?.mediaType === 'video' && banner?.useVideoBackground;
-  const backgroundUrl = banner ? getMinioUrl(banner.mediaUrl) : heroBg;
+  const backgroundUrl = banner?.mediaUrl && banner.mediaUrl !== "pending" ? getMinioUrl(banner.mediaUrl) : heroBg;
+
+  // Dynamic Text Content with Fallbacks
+  const slogan = banner?.slogan || "Premium Event Management & Banquet Services";
+  const rawTitle = banner?.title || "Crafting Unforgettable - Celebrations";
+  const subtitle = banner?.subtitle || "Let us plan your next event together — from intimate gatherings to grand celebrations, we bring your vision to life with Star Food & Banquet.";
+
+  // Title Split Logic for Highlight
+  const titleParts = rawTitle.split('-');
+  const mainTitle = titleParts[0].trim();
+  const highlightedTitle = titleParts[1]?.trim();
 
   return (
     <section className="relative min-h-[calc(100vh-100px)] flex items-center justify-center overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0">
-        {shouldUseVideo && banner?.mediaUrl ? (
+        {shouldUseVideo && banner?.mediaUrl && banner.mediaUrl !== "pending" ? (
           <video 
             src={backgroundUrl} 
             autoPlay 
@@ -52,8 +65,9 @@ const HeroSection = () => {
         ) : (
           <img 
             src={backgroundUrl} 
-            alt="Luxury banquet hall" 
-            className="w-full h-full object-cover" 
+            alt="Star Banquet Pepsicola – elegant banquet hall and event venue in Kathmandu" 
+            className="w-full h-full object-cover"
+            fetchPriority="high"
           />
         )}
         {/* Only top shadow — to keep navbar readable. No sides, no bottom. */}
@@ -75,7 +89,7 @@ const HeroSection = () => {
           className="uppercase tracking-[0.25em] text-sm font-ui font-semibold text-[#F59620] mb-6"
           style={{ textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}
         >
-          Premium Event Management &amp; Banquet Services
+          {slogan}
         </motion.p>
 
         <motion.h1
@@ -85,9 +99,13 @@ const HeroSection = () => {
           className="font-heading text-5xl md:text-7xl lg:text-8xl text-white mb-6 italic leading-tight"
           style={{ textShadow: "0 4px 32px rgba(0,0,0,0.85), 0 2px 8px rgba(0,0,0,0.6)" }}
         >
-          Crafting Unforgettable
-          <br />
-          <span style={{ color: "#F59620" }}>Celebrations</span>
+          {mainTitle}
+          {highlightedTitle && (
+            <>
+              <br />
+              <span style={{ color: "#F59620" }}>{highlightedTitle}</span>
+            </>
+          )}
         </motion.h1>
 
         <motion.p
@@ -97,8 +115,7 @@ const HeroSection = () => {
           className="font-body text-lg md:text-xl text-white/95 max-w-2xl mx-auto mb-10 leading-relaxed"
           style={{ textShadow: "0 2px 12px rgba(0,0,0,0.8)" }}
         >
-          Let us plan your next event together — from intimate gatherings to grand celebrations,
-          we bring your vision to life with Star Food &amp; Banquet.
+          {subtitle}
         </motion.p>
 
         <motion.div

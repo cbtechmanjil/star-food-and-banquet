@@ -13,6 +13,7 @@ const navLinks = [
   { label: "Events", path: "/events" },
   { label: "Our Café", path: "/our-cafe" },
   { label: "Gallery", path: "/gallery" },
+  { label: "Blog", path: "/blog" },
   // { label: "Contact", path: "/contact" },
 ];
 
