@@ -1,19 +1,17 @@
 /**
  * SEO metadata constants for Star Banquet Pepsicola.
- * Centralised here so titles/descriptions are easy to maintain.
+ * Update values here to reflect any changes to the business.
  *
- * TODO – fill in real business data where marked:
- *   BUSINESS_PHONE – actual phone number(s)
- *   BUSINESS_ADDRESS – exact street address
- *   BUSINESS_COORDINATES – lat/lng for map-pin rich result
- *   SOCIAL_FACEBOOK / SOCIAL_INSTAGRAM – social profile URLs
- *   BUSINESS_OPENING_HOURS – real opening hours per day
+ * Remaining TODOs:
+ *   BUSINESS_ADDRESS  – add the exact street address
+ *   BUSINESS_COORDS   – update GPS coordinates to exact location
+ *   SOCIAL_LINKS      – uncomment sameAs entries once social pages are ready
  */
 
-export const SITE_URL = "https://starfoodbanquet.com"; // canonical origin — update if domain differs
+export const SITE_URL = "https://starfoodbanquet.com";
 export const SITE_NAME = "Star Banquet Pepsicola";
 
-// ─── Business info (TODO: fill missing values) ───────────────────────────────
+// ─── Business info ────────────────────────────────────────────────────────────
 export const BUSINESS_INFO = {
   name: "Star Banquet Pepsicola",
   legalName: "Star Food & Banquet Pvt. Ltd.",
@@ -22,30 +20,29 @@ export const BUSINESS_INFO = {
   url: SITE_URL,
   logo: `${SITE_URL}/favicon.png`,
   image: `${SITE_URL}/og-image.jpg`,
-  // TODO: Replace placeholder values with real business data
-  telephone: "+977-XXXXXXXXXX", // TODO: real phone
-  email: "info@starfoodbanquet.com",   // TODO: verify
+  telephone: "+977-9763488492",
+  email: "starfoodbanquet@gmail.com",
   address: {
-    streetAddress: "Pepsicola",        // TODO: exact street address
+    streetAddress: "Pepsicola", // TODO: add exact street address
     addressLocality: "Pepsicola",
     addressRegion: "Bagmati Province",
-    postalCode: "44600",               // TODO: verify
+    postalCode: "44600",
     addressCountry: "NP",
   },
   geo: {
-    latitude: "27.7172",              // TODO: update with exact coords
+    latitude: "27.7172",  // TODO: update with exact GPS coordinates
     longitude: "85.3240",
   },
   areaServed: ["Pepsicola", "Kathmandu", "Bhaktapur", "Lalitpur", "Nepal"],
   openingHours: [
-    "Mo-Su 09:00-21:00",             // TODO: verify actual hours
+    "Sun-Sat 08:00-22:00",
   ],
   priceRange: "$$",
   servesCuisine: ["Nepali", "Indian", "Continental"],
-  // TODO: add real social profile URLs when available
+  // TODO: uncomment once social pages are live
   sameAs: [
-    // "https://www.facebook.com/StarBanquetPepsicola",
-    // "https://www.instagram.com/starbanquetpepsicola",
+    // "https://www.facebook.com/starfoodbanquet",
+    // "https://www.instagram.com/starfoodbanquet",
   ],
 };
 
