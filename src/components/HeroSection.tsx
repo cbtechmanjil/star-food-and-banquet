@@ -52,8 +52,9 @@ const HeroSection = () => {
         ) : (
           <img 
             src={backgroundUrl} 
-            alt="Luxury banquet hall" 
-            className="w-full h-full object-cover" 
+            alt="Star Banquet Pepsicola – elegant banquet hall and event venue in Kathmandu" 
+            className="w-full h-full object-cover"
+            fetchPriority="high"
           />
         )}
         {/* Only top shadow — to keep navbar readable. No sides, no bottom. */}

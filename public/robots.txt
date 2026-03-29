@@ -1,14 +1,13 @@
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: Twitterbot
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
+# Star Banquet Pepsicola – robots.txt
+# https://starfoodbanquet.com/robots.txt
 
 User-agent: *
 Allow: /
+
+# Block admin and internal routes from indexing
+Disallow: /admin
+Disallow: /login
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://starfoodbanquet.com/sitemap.xml

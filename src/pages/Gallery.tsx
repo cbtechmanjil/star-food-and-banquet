@@ -7,6 +7,8 @@ import { ChevronLeft, ChevronRight, X, ZoomIn } from "lucide-react";
 import CTASection from "@/components/CTASection";
 import { apiGet } from "@/lib/api";
 import { getMinioUrl } from "@/lib/minioUrl";
+import PageSEO from "@/components/PageSEO";
+import { PAGE_META } from "@/lib/seo";
 
 const categories = ["All", "Weddings", "Corporate", "Parties", "Venues"];
 
@@ -78,6 +80,11 @@ const Gallery = () => {
 
   return (
     <div className="min-h-screen">
+      <PageSEO
+        title={PAGE_META.gallery.title}
+        description={PAGE_META.gallery.description}
+        canonical={PAGE_META.gallery.canonical}
+      />
       <Navbar />
 
       {/* Page Header */}
@@ -148,8 +155,9 @@ const Gallery = () => {
                 >
                   <img
                     src={img.src}
-                    alt={img.title}
+                    alt={`${img.title} – Star Banquet Pepsicola ${img.category} event, Kathmandu`}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    loading="lazy"
                   />
                   <div className="absolute inset-0 transition-all duration-500 flex flex-col items-center justify-center"
                     style={{ background: "rgba(0,0,0,0)" }}

@@ -6,10 +6,10 @@ import weddingImg from "@/assets/service-wedding.jpg";
 import eventImg from "@/assets/service-event.jpg";
 
 const services = [
-  { title: "Corporate", image: corpImg, desc: "Professional events that impress" },
-  { title: "Parties", image: partyImg, desc: "Unforgettable celebrations" },
-  { title: "Weddings", image: weddingImg, desc: "Your dream day, perfected" },
-  { title: "Event Planning", image: eventImg, desc: "Full-service coordination" },
+  { title: "Corporate", image: corpImg, desc: "Professional events that impress", alt: "Corporate event venue at Star Banquet Pepsicola, Kathmandu" },
+  { title: "Parties", image: partyImg, desc: "Unforgettable celebrations", alt: "Private party celebration at Star Banquet Pepsicola" },
+  { title: "Weddings", image: weddingImg, desc: "Your dream day, perfected", alt: "Wedding venue setup at Star Banquet Pepsicola in Pepsicola Kathmandu" },
+  { title: "Event Planning", image: eventImg, desc: "Full-service coordination", alt: "Event planning and coordination at Star Banquet Pepsicola" },
 ];
 
 const ServicesSection = () => {
@@ -41,8 +41,9 @@ const ServicesSection = () => {
           >
             <img
               src={services[0].image}
-              alt={services[0].title}
+              alt={services[0].alt}
               className="w-full h-full object-cover min-h-[400px] md:min-h-full transition-transform duration-700 group-hover:scale-110"
+              loading="lazy"
             />
             {/* Identical gradient to Corporate — only bottom fade */}
             <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 to-transparent" />
@@ -62,8 +63,9 @@ const ServicesSection = () => {
           >
             <img
               src={services[1].image}
-              alt={services[1].title}
+              alt={services[1].alt}
               className="w-full h-full min-h-[250px] object-cover transition-transform duration-700 group-hover:scale-110"
+              loading="lazy"
             />
             <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-foreground/70 to-transparent" />
             <div className="absolute bottom-6 left-6 z-10">
@@ -84,8 +86,9 @@ const ServicesSection = () => {
               >
                 <img
                   src={s.image}
-                  alt={s.title}
+                  alt={s.alt}
                   className="w-full h-full min-h-[200px] object-cover transition-transform duration-700 group-hover:scale-110"
+                  loading="lazy"
                 />
                 <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-foreground/70 to-transparent" />
                 <div className="absolute bottom-4 left-4 z-10">

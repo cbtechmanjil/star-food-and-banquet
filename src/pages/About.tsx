@@ -4,6 +4,8 @@ import Footer from "@/components/Footer";
 import CTASection from "@/components/CTASection";
 import aboutImg from "@/assets/about-venue.jpg";
 import { Award, Users, Clock, Star } from "lucide-react";
+import PageSEO from "@/components/PageSEO";
+import { PAGE_META } from "@/lib/seo";
 
 const values = [
   { icon: Award, title: "Excellence", desc: "We pursue perfection in every detail, ensuring flawless execution." },
@@ -15,19 +17,24 @@ const values = [
 const About = () => {
   return (
     <div className="min-h-screen">
+      <PageSEO
+        title={PAGE_META.about.title}
+        description={PAGE_META.about.description}
+        canonical={PAGE_META.about.canonical}
+      />
       <Navbar />
       {/* Hero */}
       <section className="relative pt-24 pb-24 bg-gradient-to-r from-secondary/5 via-primary/5 to-secondary/5">
         <div className="container mx-auto px-6 text-center">
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="section-subtitle mb-3">Our Story</motion.p>
-          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="font-heading text-5xl md:text-6xl italic">About Star Food & Banquet</motion.h1>
+          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="font-heading text-5xl md:text-6xl italic">About Star Banquet Pepsicola</motion.h1>
         </div>
       </section>
 
       <section className="py-24">
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center max-w-6xl mx-auto">
-            <motion.img initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} src={aboutImg} alt="Venue" className=" w-full" />
+            <motion.img initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} src={aboutImg} alt="Star Banquet Pepsicola interior – elegant banquet hall setup in Kathmandu" className=" w-full" />
             <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
               <h2 className="section-title mb-6">A Legacy of Star Food & Banquet Since 2010</h2>
               <p className="font-body text-muted-foreground leading-relaxed mb-4">

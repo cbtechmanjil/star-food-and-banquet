@@ -16,6 +16,19 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { getMinioUrl } from "@/lib/minioUrl";
+import PageSEO from "@/components/PageSEO";
+import { PAGE_META, BUSINESS_INFO } from "@/lib/seo";
+
+const contactJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  "url": PAGE_META.contact.canonical,
+  "name": "Contact Star Banquet Pepsicola",
+  "description": PAGE_META.contact.description,
+  "mainEntity": {
+    "@id": `${BUSINESS_INFO.url}/#business`,
+  },
+};
 
 const Contact = () => {
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", eventType: "", message: "" });
@@ -35,6 +48,12 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen">
+      <PageSEO
+        title={PAGE_META.contact.title}
+        description={PAGE_META.contact.description}
+        canonical={PAGE_META.contact.canonical}
+        jsonLd={contactJsonLd}
+      />
       <Navbar />
 
       {/* Hero */}

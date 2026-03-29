@@ -5,21 +5,102 @@
   <meta charset="UTF-8" />
   <link rel="icon" type="image/png" href="/favicon.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <!-- TODO: Set the document title to the name of your application -->
-  <title>Star Food & Banquet — Premium Event Management & Banquet Services</title>
+
+  <!-- Default title — overridden per-page by PageSEO component -->
+  <title>Star Banquet Pepsicola | Premier Banquet Hall &amp; Event Venue in Kathmandu</title>
   <meta name="description"
-    content="Welcome to Star Food and Banquet, the perfect destination where delightful dining meets unforgettable celebrations. Located in the heart of the city, we offer a diverse menu and elegant banquet halls for weddings and parties." />
-  <meta name="author" content="Star Food and Banquet" />
+    content="Star Banquet Pepsicola offers elegant banquet halls for weddings, receptions, corporate events, birthday parties and catering in Pepsicola, Kathmandu. Book your event today." />
+  <meta name="author" content="Star Banquet Pepsicola" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://starfoodbanquet.com/" />
 
-  <meta property="og:title" content="Star Food & Banquet — Premium Event Management & Banquet Services" />
+  <!-- Geo / Local SEO hints -->
+  <meta name="geo.region" content="NP-BA" />
+  <meta name="geo.placename" content="Pepsicola, Kathmandu" />
+  <meta name="geo.position" content="27.7172;85.3240" />
+  <meta name="ICBM" content="27.7172, 85.3240" />
+
+  <!-- Open Graph -->
+  <meta property="og:site_name" content="Star Banquet Pepsicola" />
+  <meta property="og:title" content="Star Banquet Pepsicola | Premier Banquet Hall &amp; Event Venue in Kathmandu" />
   <meta property="og:description"
-    content="Welcome to Star Food and Banquet! A family-friendly restaurant and event space offering diverse menus, warm hospitality, and elegant banquet halls for your special moments." />
+    content="Star Banquet Pepsicola offers elegant banquet halls for weddings, receptions, corporate events, birthday parties and catering in Pepsicola, Kathmandu." />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content="/og-image.jpg" />
+  <meta property="og:url" content="https://starfoodbanquet.com/" />
+  <meta property="og:image" content="https://starfoodbanquet.com/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:locale" content="en_US" />
 
+  <!-- Twitter / X Card -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:site" content="@StarFoodBanquet" />
-  <meta name="twitter:image" content="/og-image.jpg" />
+  <meta name="twitter:title" content="Star Banquet Pepsicola | Premier Banquet Hall &amp; Event Venue in Kathmandu" />
+  <meta name="twitter:description"
+    content="Star Banquet Pepsicola offers elegant banquet halls for weddings, receptions, corporate events and catering in Kathmandu." />
+  <meta name="twitter:image" content="https://starfoodbanquet.com/og-image.jpg" />
+
+  <!-- LocalBusiness + BanquetHall JSON-LD (static, always present for crawlers) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": ["LocalBusiness", "FoodEstablishment", "EventVenue"],
+        "@id": "https://starfoodbanquet.com/#business",
+        "name": "Star Banquet Pepsicola",
+        "legalName": "Star Food & Banquet Pvt. Ltd.",
+        "description": "Premier banquet hall and event venue in Pepsicola, Kathmandu offering weddings, receptions, corporate events, birthday parties and catering services.",
+        "url": "https://starfoodbanquet.com",
+        "logo": "https://starfoodbanquet.com/favicon.png",
+        "image": "https://starfoodbanquet.com/og-image.jpg",
+        "telephone": "+977-XXXXXXXXXX",
+        "email": "info@starfoodbanquet.com",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Pepsicola",
+          "addressLocality": "Pepsicola",
+          "addressRegion": "Bagmati Province",
+          "postalCode": "44600",
+          "addressCountry": "NP"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": "27.7172",
+          "longitude": "85.3240"
+        },
+        "areaServed": ["Pepsicola", "Kathmandu", "Bhaktapur", "Lalitpur"],
+        "openingHoursSpecification": [
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+            "opens": "09:00",
+            "closes": "21:00"
+          }
+        ],
+        "priceRange": "$$",
+        "servesCuisine": ["Nepali", "Indian", "Continental"],
+        "hasMap": "https://maps.google.com/?q=Pepsicola+Kathmandu",
+        "sameAs": []
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://starfoodbanquet.com/#website",
+        "url": "https://starfoodbanquet.com",
+        "name": "Star Banquet Pepsicola",
+        "description": "Premier banquet hall and event venue in Pepsicola, Kathmandu.",
+        "publisher": { "@id": "https://starfoodbanquet.com/#business" },
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://starfoodbanquet.com/?s={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        }
+      }
+    ]
+  }
+  </script>
 </head>
 
 <body>

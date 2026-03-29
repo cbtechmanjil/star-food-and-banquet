@@ -14,7 +14,8 @@ const CTASection = () => {
       {/* Decorative Flowers */}
       <motion.img
         src={flower1}
-        alt="Decorative flower"
+        alt=""
+        aria-hidden="true"
         className="absolute left-0 bottom-0 w-80 md:w-[450px] max-w-[40vw] opacity-90 object-contain pointer-events-none z-0"
         initial={{ opacity: 0, x: -100 }}
         whileInView={{ opacity: 1, x: 0 }}
@@ -23,7 +24,8 @@ const CTASection = () => {
       />
       <motion.img
         src={flower2}
-        alt="Decorative flower"
+        alt=""
+        aria-hidden="true"
         className="absolute right-0 bottom-0 w-80 md:w-[450px] max-w-[40vw] opacity-90 object-contain pointer-events-none z-0"
         initial={{ opacity: 0, x: 100 }}
         whileInView={{ opacity: 1, x: 0 }}

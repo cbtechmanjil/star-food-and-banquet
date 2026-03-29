@@ -7,13 +7,27 @@ import corpImg from "@/assets/service-corporate.jpg";
 import partyImg from "@/assets/service-party.jpg";
 import eventImg from "@/assets/service-event.jpg";
 import { Heart, Briefcase, PartyPopper, Cake, Star, Users } from "lucide-react";
+import PageSEO from "@/components/PageSEO";
+import { PAGE_META, BUSINESS_INFO } from "@/lib/seo";
 
 const events = [
-  { icon: Heart, title: "Weddings", desc: "From intimate ceremonies to grand celebrations, we create the wedding of your dreams with bespoke planning and flawless execution.", image: weddingImg },
-  { icon: Briefcase, title: "Corporate Events", desc: "Impress your clients and team with professionally organized conferences, galas, product launches, and corporate retreats.", image: corpImg },
-  { icon: PartyPopper, title: "Private Parties", desc: "Celebrate in style with custom-themed parties featuring exquisite catering, entertainment, and stunning décor.", image: partyImg },
-  { icon: Cake, title: "Birthdays", desc: "Make every birthday milestone unforgettable with creative themes, delicious cakes, and joyful experiences.", image: eventImg },
+  { icon: Heart, title: "Weddings", desc: "From intimate ceremonies to grand celebrations, we create the wedding of your dreams with bespoke planning and flawless execution.", image: weddingImg, alt: "Elegant wedding ceremony setup at Star Banquet Pepsicola, Kathmandu" },
+  { icon: Briefcase, title: "Corporate Events", desc: "Impress your clients and team with professionally organized conferences, galas, product launches, and corporate retreats.", image: corpImg, alt: "Corporate event setup at Star Banquet Pepsicola" },
+  { icon: PartyPopper, title: "Private Parties", desc: "Celebrate in style with custom-themed parties featuring exquisite catering, entertainment, and stunning décor.", image: partyImg, alt: "Private party celebration setup at Star Banquet Pepsicola Kathmandu" },
+  { icon: Cake, title: "Birthdays", desc: "Make every birthday milestone unforgettable with creative themes, delicious cakes, and joyful experiences.", image: eventImg, alt: "Birthday party venue at Star Banquet Pepsicola" },
 ];
+
+const eventsJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Events & Services at Star Banquet Pepsicola",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Wedding Venue in Pepsicola", "url": `${BUSINESS_INFO.url}/events` },
+    { "@type": "ListItem", "position": 2, "name": "Corporate Event Venue Kathmandu", "url": `${BUSINESS_INFO.url}/events` },
+    { "@type": "ListItem", "position": 3, "name": "Birthday Party Venue Pepsicola", "url": `${BUSINESS_INFO.url}/events` },
+    { "@type": "ListItem", "position": 4, "name": "Private Party Venue Kathmandu", "url": `${BUSINESS_INFO.url}/events` },
+  ],
+};
 
 const packages = [
   { name: "Silver", price: "$2,500", features: ["Up to 50 guests", "Basic venue décor", "3-course menu", "4-hour event"], highlight: false },
@@ -24,6 +38,12 @@ const packages = [
 const Events = () => {
   return (
     <div className="min-h-screen">
+      <PageSEO
+        title={PAGE_META.events.title}
+        description={PAGE_META.events.description}
+        canonical={PAGE_META.events.canonical}
+        jsonLd={eventsJsonLd}
+      />
       <Navbar />
       <section className="relative pt-24 pb-24  bg-gradient-to-r from-secondary/5 via-primary/5 to-secondary/5">
         <div className="container mx-auto px-6 text-center">
@@ -38,7 +58,7 @@ const Events = () => {
             {events.map((event, i) => (
               <motion.div key={event.title} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className={`grid grid-cols-1 lg:grid-cols-2 gap-12 items-center ${i % 2 === 1 ? "lg:direction-rtl" : ""}`}>
                 <div className={i % 2 === 1 ? "lg:order-2" : ""}>
-                  <img src={event.image} alt={event.title} className=" w-full h-80 object-cover" />
+                  <img src={event.image} alt={event.alt} className=" w-full h-80 object-cover" loading="lazy" />
                 </div>
                 <div className={i % 2 === 1 ? "lg:order-1" : ""}>
                   <event.icon className="w-10 h-10 text-primary mb-4" />
