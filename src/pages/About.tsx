@@ -38,19 +38,22 @@ const About = () => {
             <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
               <h2 className="section-title mb-6">A Legacy of Star Food & Banquet Since 2010</h2>
               <p className="font-body text-muted-foreground leading-relaxed mb-4">
-                Welcome to Star Food and Banquet, the perfect destination where delightful dining meets unforgettable celebrations. Located in the heart of the city, Star Food and Banquet is a family-friendly restaurant and event space that brings people together through great food, warm hospitality, and joyful experiences.
+                Welcome to Star Food and Banquet Pepsicola, one of the most trusted destinations for banquet services, wedding venues, and event spaces in Kathmandu. Conveniently located in Pepsicola, we offer the perfect blend of delicious dining, elegant ambiance, and exceptional hospitality for both everyday meals and special occasions.
               </p>
               <p className="font-body text-muted-foreground leading-relaxed mb-4">
-                At Star Food and Banquet, we take pride in offering a diverse menu featuring delicious local and international dishes prepared with fresh ingredients and a passion for flavor. Whether you're craving a comforting meal with family, a fun lunch with friends, or a romantic dinner, our culinary team crafts every dish with care to satisfy every palate.
+                At Star Food and Banquet, we proudly serve a wide range of Nepali, Indian, and international cuisines, prepared using fresh ingredients and crafted with passion. Whether you're planning a family dinner, casual lunch, or a romantic evening, our menu is designed to satisfy every taste and create a memorable dining experience.
               </p>
               <p className="font-body text-muted-foreground leading-relaxed mb-4">
-                We also offer spacious and elegant banquet halls ideal for weddings, receptions, corporate events, birthday parties, anniversaries, and social gatherings. Our dedicated event team works closely with you to tailor every detail—from seating arrangements to décor and catering—so your special moment becomes a cherished memory.
+                As a leading banquet hall in Pepsicola, we specialize in hosting weddings, receptions, birthday parties, engagement ceremonies, corporate events, and social gatherings in Kathmandu. Our spacious and beautifully designed banquet halls provide the ideal setting for events of all sizes. From customized décor and seating arrangements to professional catering services, our experienced team ensures every detail is handled with care.
               </p>
               <p className="font-body text-muted-foreground leading-relaxed mb-4">
-                Designed with comfort and style in mind, our venue boasts a welcoming ambiance, attentive service, and a comfortable play area to keep younger guests entertained. At Star Food and Banquet, every visit is more than just a meal—it's an experience.
+                Our venue is thoughtfully designed to offer comfort, style, and convenience, making us a preferred choice for those looking for a party palace or event venue in Kathmandu. With a welcoming atmosphere, attentive service, and facilities suitable for families, including a play area for children, we create experiences that guests truly enjoy.
               </p>
-              <p className="font-body text-muted-foreground leading-relaxed">
-                Come savor the flavors, celebrate life's special occasions, and create unforgettable moments with us at Star Food and Banquet.
+              <p className="font-body text-muted-foreground leading-relaxed mb-4">
+                At Star Banquet Pepsicola, we don’t just host events—we create lasting memories. Whether you're celebrating a wedding or organizing a corporate function, we are committed to making your occasion seamless and unforgettable.
+              </p>
+              <p className="font-body text-muted-foreground leading-relaxed font-semibold text-primary">
+                Book your event today and experience one of the best banquet halls in Pepsicola, Kathmandu.
               </p>
             </motion.div>
           </div>

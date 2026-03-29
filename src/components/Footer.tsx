@@ -28,6 +28,7 @@ const Footer = () => {
                 { label: "Our Café", path: "/our-cafe" },
                 { label: "Events", path: "/events" },
                 { label: "Gallery", path: "/gallery" },
+                { label: "Blog", path: "/blog" },
                 { label: "Contact", path: "/contact" },
               ].map((l) => (
                 <Link key={l.label} to={l.path} className="font-body text-sm text-primary-foreground/60 hover:text-primary transition-colors">

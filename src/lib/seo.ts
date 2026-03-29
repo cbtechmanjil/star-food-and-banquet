@@ -93,4 +93,10 @@ export const PAGE_META: Record<
       "Get in touch with Star Banquet Pepsicola to book your wedding, corporate event or party. Located in Pepsicola, Kathmandu, Nepal. Request a quote today.",
     canonical: `${SITE_URL}/contact`,
   },
+  blog: {
+    title: "Blog & Tips | Expert Wedding & Event Planning in Kathmandu",
+    description:
+      "Wedding tips, event planning guides and banquet hall checklists. Expert advice from Star Banquet Pepsicola to make your Kathmandu celebration unforgettable.",
+    canonical: `${SITE_URL}/blog`,
+  },
 };

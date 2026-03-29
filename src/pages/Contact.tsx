@@ -31,7 +31,7 @@ const contactJsonLd = {
 };
 
 const Contact = () => {
-  const [formData, setFormData] = useState({ name: "", email: "", phone: "", eventType: "", message: "" });
+  const [formData, setFormData] = useState({ name: "", email: "", phone: "", eventType: "", pax: "", message: "" });
 
   const { data: contact } = useContactSettings();
 
@@ -40,7 +40,7 @@ const Contact = () => {
     try {
       await apiPost("/messages", formData);
       toast.success("Thank you! Your message has been sent.");
-      setFormData({ name: "", email: "", phone: "", eventType: "", message: "" });
+      setFormData({ name: "", email: "", phone: "", eventType: "", pax: "", message: "" });
     } catch (err) {
       toast.error("Failed to send message. Please try again.");
     }
@@ -77,9 +77,10 @@ const Contact = () => {
       {/* Contact form + info */}
       <section className="py-24">
         <div className="container mx-auto px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-[0.8fr_1.2fr] gap-16 max-w-6xl mx-auto">
             {/* Contact Info */}
             <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
+              {/* Info content... */}
               <h2 className="font-heading text-3xl mb-8">Let's Plan Your Event</h2>
               <p className="font-body text-muted-foreground leading-relaxed mb-10">
                 Ready to create something extraordinary? Reach out to us and our team will get back to you within 24 hours.
@@ -161,6 +162,7 @@ const Contact = () => {
                     />
                   </div>
                 </div>
+                
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="font-ui text-sm font-medium text-foreground block mb-2">Phone</label>
@@ -169,7 +171,7 @@ const Contact = () => {
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       className="w-full px-4 py-3 border border-border bg-background font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
-                      placeholder="+1 234 567 890"
+                      placeholder="+977"
                     />
                   </div>
                   <div>
@@ -189,6 +191,19 @@ const Contact = () => {
                         <SelectItem value="other" className="font-body text-sm">Other</SelectItem>
                       </SelectContent>
                     </Select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="font-ui text-sm font-medium text-foreground block mb-2">Estimated Pax</label>
+                    <input
+                      type="text"
+                      value={formData.pax}
+                      onChange={(e) => setFormData({ ...formData, pax: e.target.value })}
+                      className="w-full px-4 py-3 border border-border bg-background font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
+                      placeholder="e.g. 50"
+                    />
                   </div>
                 </div>
                 <div>

@@ -20,6 +20,10 @@ const contactMessageSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  pax: {
+    type: String, // String to allow '50-100' or similar
+    required: false
+  },
   status: {
     type: String,
     enum: ['unread', 'read', 'archived'],
