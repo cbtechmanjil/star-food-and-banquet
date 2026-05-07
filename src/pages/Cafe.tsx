@@ -29,7 +29,8 @@ import cafeInterior3 from "@/assets/cafe-interior-3.png";
 
 import { useQuery } from "@tanstack/react-query";
 import { apiGet } from "@/lib/api";
-import { getMinioUrl } from "@/lib/minioUrl";
+import { getMinioUrl, getOptimizedImageUrl } from "@/lib/minioUrl";
+import OptimizedImage from "@/components/OptimizedImage";
 
 /* ─────────────── Signature Carousel (CSS-driven, infinite, no flicker) ─────────────── */
 
@@ -51,9 +52,11 @@ const SignatureCarousel = ({ items }: { items: any[] }) => {
           >
             <div className="glass-card-hover !rounded-none overflow-hidden group">
               <div className="relative h-72 md:h-80 overflow-hidden">
-                <img
-                  src={getMinioUrl(item.image)}
+                <OptimizedImage
+                  src={item.image}
                   alt={item.name}
+                  width={400}
+                  quality={75}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
@@ -99,9 +102,11 @@ const AmbianceGallery = ({ images }: { images: any[] }) => {
             key={`gal-${i}`}
             className="flex-shrink-0 w-[320px] md:w-[420px] h-[340px] md:h-[440px] mx-2 overflow-hidden group"
           >
-            <img
-              src={getMinioUrl(img.url)}
+            <OptimizedImage
+              src={img.url}
               alt={`Café ambiance ${(i % images.length) + 1}`}
+              width={500}
+              quality={70}
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
             />
           </div>
@@ -176,10 +181,17 @@ const Cafe = () => {
       {/* ══════════ HERO ══════════ */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
-          {heroImage ? (
-             <img src={heroImage} alt="Star Café" className="w-full h-full object-cover" />
+          {data?.banner?.bannerImage ? (
+             <OptimizedImage 
+               src={data.banner.bannerImage} 
+               alt="Star Café" 
+               width={1920}
+               quality={85}
+               containerClassName="w-full h-full"
+               className="w-full h-full object-cover" 
+             />
           ) : (
-             <div className="w-full h-full bg-charcoal" />
+             <img src={cafeHero} alt="Star Café" className="w-full h-full object-cover" />
           )}
           <div
             className="absolute inset-0"

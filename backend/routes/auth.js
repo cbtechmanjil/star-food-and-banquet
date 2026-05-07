@@ -72,4 +72,28 @@ router.get('/verify', (req, res) => {
   }
 });
 
+const { protectAdmin } = require('../middleware/auth');
+
+// @route   PUT /api/auth/admin/update
+// @desc    Update admin username and password
+router.put('/admin/update', protectAdmin, async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const admin = await Admin.findById(req.admin.id);
+
+    if (!admin) {
+      return res.status(404).json({ success: false, message: 'Admin not found' });
+    }
+
+    if (username) admin.username = username;
+    if (password) admin.password = password;
+
+    await admin.save();
+    res.json({ success: true, message: 'Admin credentials updated successfully' });
+  } catch (err) {
+    console.error('Update Admin Error:', err.message);
+    res.status(500).json({ success: false, message: 'Server error updating admin' });
+  }
+});
+
 module.exports = router;

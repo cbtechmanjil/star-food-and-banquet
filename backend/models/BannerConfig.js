@@ -25,6 +25,12 @@ const bannerConfigSchema = new mongoose.Schema({
   subtitle: {
     type: String,
     default: "Let us plan your next event together — from intimate gatherings to grand celebrations, we bring your vision to life with Star Food & Banquet."
+  },
+  order: {
+    type: Number,
+    required: true,
+    enum: [0, 1, 2, 3],
+    unique: true
   }
 }, { timestamps: true });
 
