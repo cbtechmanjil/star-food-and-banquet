@@ -21,6 +21,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import BackToTop from "./components/BackToTop";
 import ScrollToTop from "./components/ScrollToTop";
 import { useEffect } from "react";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 const queryClient = new QueryClient();
 
@@ -74,7 +75,9 @@ const App = () => (
       <BackToTop />
       <BrowserRouter>
         <ScrollToTop />
-        <AnimatedRoutes />
+        <ErrorBoundary>
+          <AnimatedRoutes />
+        </ErrorBoundary>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

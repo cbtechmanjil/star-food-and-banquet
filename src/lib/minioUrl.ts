@@ -32,6 +32,39 @@ export function getMinioUrl(relativePath: string | null | undefined): string {
 }
 
 /**
+ * Constructs an optimized image URL pointing to our backend resizer
+ * @param relativePath - Path from database
+ * @param options - Resize options { w, h, q, fmt }
+ * @returns Optimized URL
+ */
+export function getOptimizedImageUrl(
+  relativePath: string | null | undefined,
+  options: { w?: number; h?: number; q?: number; fmt?: 'webp' | 'avif' | 'jpeg' } = {}
+): string {
+  if (!relativePath) return '';
+  
+  // If it's a full external URL, we can't easily resize it through our proxy
+  if (relativePath.startsWith('http://') || relativePath.startsWith('https://')) {
+    return relativePath;
+  }
+
+  const baseUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:7001';
+  const apiBase = baseUrl.endsWith('/api') ? baseUrl : `${baseUrl}/api`;
+  
+  // Construct query params
+  const params = new URLSearchParams();
+  if (options.w) params.append('w', options.w.toString());
+  if (options.h) params.append('h', options.h.toString());
+  if (options.q) params.append('q', options.q.toString());
+  if (options.fmt) params.append('fmt', options.fmt);
+
+  const queryString = params.toString();
+  const cleanPath = relativePath.startsWith('/') ? relativePath.slice(1) : relativePath;
+  
+  return `${apiBase}/media/${cleanPath}${queryString ? `?${queryString}` : ''}`;
+}
+
+/**
  * Get multiple Minio URLs
  * @param paths - Array of relative paths
  * @returns Array of full URLs
@@ -79,6 +112,7 @@ export function transformImageUrls<T>(
 export default {
   getMinioUrl,
   getMinioUrls,
+  getOptimizedImageUrl,
   transformImageUrls,
   MINIO_BASE_URL,
 };

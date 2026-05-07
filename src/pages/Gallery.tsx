@@ -1,49 +1,59 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { ChevronLeft, ChevronRight, X, ZoomIn } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2, X, ZoomIn } from "lucide-react";
 import CTASection from "@/components/CTASection";
 import { apiGet } from "@/lib/api";
-import { getMinioUrl } from "@/lib/minioUrl";
+import { getMinioUrl, getOptimizedImageUrl } from "@/lib/minioUrl";
 import PageSEO from "@/components/PageSEO";
 import { PAGE_META } from "@/lib/seo";
+import OptimizedImage from "@/components/OptimizedImage";
 
 const categories = ["All", "Weddings", "Corporate", "Parties", "Venues"];
 
-// 3 columns, 5 rows = 15 images shown initially per filter
-const COLS = 3;
-const INITIAL_ROWS = 5;
-const INITIAL_COUNT = COLS * INITIAL_ROWS; // 15
+const PAGE_SIZE = 12;
 
 const Gallery = () => {
   const [filter, setFilter] = useState("All");
-  const [visibleCount, setVisibleCount] = useState(INITIAL_COUNT);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
-  const { data: serverImages, isLoading } = useQuery({
-    queryKey: ['publicGalleryImages'],
-    queryFn: async () => {
-      const json = await apiGet("/gallery");
-      return json.data;
-    }
+  const { 
+    data, 
+    fetchNextPage, 
+    hasNextPage, 
+    isFetchingNextPage, 
+    isLoading 
+  } = useInfiniteQuery({
+    queryKey: ['publicGalleryImages', filter],
+    queryFn: async ({ pageParam = 1 }) => {
+      const endpoint = `/gallery?page=${pageParam}&limit=${PAGE_SIZE}${filter !== 'All' ? `&category=${filter}` : ''}`;
+      const json = await apiGet(endpoint);
+      return json;
+    },
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      if (lastPage.pagination.page < lastPage.pagination.pages) {
+        return lastPage.pagination.page + 1;
+      }
+      return undefined;
+    },
   });
 
-  const allImages = serverImages ? serverImages.map((img: any) => ({
-    src: getMinioUrl(img.url),
-    category: img.category,
-    title: img.title
-  })) : [];
+  const visibleImages = useMemo(() => {
+    if (!data) return [];
+    return data.pages.flatMap((page) => page.data.map((img: any) => ({
+      src: img.url,
+      fullUrl: getMinioUrl(img.url),
+      category: img.category,
+      title: img.title
+    })));
+  }, [data]);
 
-  const filtered = filter === "All" ? allImages : allImages.filter((img) => img.category === filter);
-  const visibleImages = filtered.slice(0, visibleCount);
-  const hasMore = visibleCount < filtered.length;
-
-  // Reset visible count when filter changes
+  // Reset visible count logic is now handled by react-query's key change (filter)
   const handleFilterChange = (cat: string) => {
     setFilter(cat);
-    setVisibleCount(INITIAL_COUNT);
   };
 
   // Lightbox navigation
@@ -149,20 +159,18 @@ const Gallery = () => {
                   initial={{ opacity: 0, scale: 0.92 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.92 }}
-                  transition={{ duration: 0.4, delay: i * 0.03 }}
-                  className="relative group overflow-hidden cursor-pointer aspect-[4/3] shadow-md"
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  className="relative group overflow-hidden cursor-pointer aspect-[4/3] shadow-md bg-gray-100"
                   onClick={() => openLightbox(i)}
                 >
-                  <img
+                  <OptimizedImage
                     src={img.src}
                     alt={`${img.title} – Star Banquet Pepsicola ${img.category} event, Kathmandu`}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    loading="lazy"
+                    width={500}
+                    quality={75}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 will-change-transform"
                   />
-                  <div className="absolute inset-0 transition-all duration-500 flex flex-col items-center justify-center"
-                    style={{ background: "rgba(0,0,0,0)" }}
-                    onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.background = "rgba(40,56,143,0.55)"; }}
-                    onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.background = "rgba(0,0,0,0)"; }}
+                  <div className="absolute inset-0 transition-all duration-500 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 bg-secondary/55"
                   >
                     <ZoomIn
                       className="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-400 mb-2"
@@ -185,20 +193,25 @@ const Gallery = () => {
           )}
 
           {/* Load More Button */}
-          {hasMore && (
+          {hasNextPage && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               className="text-center mt-12"
             >
               <button
-                onClick={() => setVisibleCount((prev) => prev + INITIAL_COUNT)}
-                className="btn-secondary rounded-full px-12 py-4 text-base font-semibold inline-flex items-center gap-3 hover:scale-105 transition-transform"
+                onClick={() => fetchNextPage()}
+                disabled={isFetchingNextPage}
+                className="btn-secondary rounded-full px-12 py-4 text-base font-semibold inline-flex items-center gap-3 hover:scale-105 transition-transform disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Load More
-                <span className="text-sm opacity-80">
-                  ({filtered.length - visibleCount} remaining)
-                </span>
+                {isFetchingNextPage ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    Loading...
+                  </>
+                ) : (
+                  "Load More"
+                )}
               </button>
             </motion.div>
           )}
@@ -251,10 +264,12 @@ const Gallery = () => {
               onClick={(e) => e.stopPropagation()}
               style={{ maxWidth: "90vw", maxHeight: "85vh" }}
             >
-              <img
+              <OptimizedImage
                 src={visibleImages[lightboxIndex].src}
                 alt={visibleImages[lightboxIndex].title}
+                quality={90}
                 className="object-contain shadow-2xl"
+                containerClassName="bg-transparent"
                 style={{ maxWidth: "85vw", maxHeight: "78vh" }}
               />
               <div className="mt-4 text-center">
@@ -283,7 +298,7 @@ const Gallery = () => {
             <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 overflow-x-auto max-w-[90vw] px-4"
               onClick={(e) => e.stopPropagation()}
             >
-              {visibleImages.map((img, i) => (
+              {visibleImages.map((img: any, i: number) => (
                 <button
                   key={i}
                   onClick={() => setLightboxIndex(i)}
@@ -293,7 +308,13 @@ const Gallery = () => {
                     opacity: i === lightboxIndex ? 1 : 0.5,
                   }}
                 >
-                  <img src={img.src} alt={img.title} className="w-full h-full object-cover" />
+                  <OptimizedImage 
+                    src={img.src} 
+                    alt={img.title} 
+                    width={100}
+                    quality={60}
+                    className="w-full h-full object-cover" 
+                  />
                 </button>
               ))}
             </div>

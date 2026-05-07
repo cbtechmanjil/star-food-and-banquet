@@ -8,11 +8,10 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
 
   const frontendPort = parseInt(env.VITE_FRONTEND_PORT || "7000");
-  const backendUrl = env.VITE_BACKEND_URL || "https://admin.starfoodbanquet.com/api";
+  const backendUrl = env.VITE_BACKEND_URL || "http://localhost:7001/api";
 
   return {
     server: {
-      host: "::",
       port: frontendPort,
       hmr: {
         overlay: false,
@@ -25,7 +24,6 @@ export default defineConfig(({ mode }) => {
       },
     },
     preview: {
-      host: "::",
       port: frontendPort,
       allowedHosts: ["starfoodbanquet.com", "www.starfoodbanquet.com", "admin.starfoodbanquet.com", "www.admin.starfoodbanquet.com", "localhost"],
     },

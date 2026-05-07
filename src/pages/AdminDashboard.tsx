@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import { toast } from "sonner";
 import { 
   LayoutDashboard, 
@@ -28,14 +28,17 @@ import {
   ChefHat,
   Zap,
   Utensils,
-  FileText
+  FileText,
+  Shield,
+  Lock
 } from "lucide-react";
 
 import CafeAdmin from "@/components/admin/CafeAdmin";
 import BanquetMenuAdmin from "@/components/admin/BanquetMenuAdmin";
 import BlogAdmin from "@/components/admin/BlogAdmin";
 import { apiGet, apiPost, apiPut, apiDelete, apiCall } from "@/lib/api";
-import { getMinioUrl } from "@/lib/minioUrl";
+import { getMinioUrl, getOptimizedImageUrl } from "@/lib/minioUrl";
+import OptimizedImage from "@/components/OptimizedImage";
 
 interface AdminData {
   username: string;
@@ -746,17 +749,6 @@ const GalleryAdminCard = () => {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this image?")) return;
-    try {
-      await apiDelete(`/gallery/admin/${id}`);
-      toast.success("Image deleted");
-      refetch();
-    } catch {
-      toast.error("Network error");
-    }
-  };
-
   return (
     <div className="space-y-8">
       {/* Page Title */}
@@ -798,7 +790,7 @@ const GalleryAdminCard = () => {
               </button>
             </div>
           ) : (
-             <div className="flex flex-col items-center gap-3">
+            <div className="flex flex-col items-center gap-3">
               <UploadCloud className="h-12 w-12 text-gray-300" />
               <p className="font-medium text-charcoal">Click to multi-select images</p>
             </div>
@@ -817,16 +809,7 @@ const GalleryAdminCard = () => {
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {images.map((img: any) => (
-              <div key={img._id} className="relative group rounded-xl overflow-hidden aspect-square border border-gray-200">
-                <img src={getMinioUrl(img.url)} className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 p-2 text-center">
-                  <p className="text-white text-xs font-semibold">{img.title}</p>
-                  <span className="text-[10px] bg-gold text-charcoal px-2 py-0.5 rounded-full">{img.category}</span>
-                  <button onClick={() => handleDelete(img._id)} className="mt-2 bg-red-500 hover:bg-red-600 text-white p-1.5 rounded-full">
-                    <X className="h-3 w-3" />
-                  </button>
-                </div>
-              </div>
+              <GalleryItem key={img._id} img={img} onUpdate={refetch} />
             ))}
           </div>
         )}
@@ -835,24 +818,156 @@ const GalleryAdminCard = () => {
   );
 };
 
+const GalleryItem = ({ img, onUpdate }: { img: any, onUpdate: () => void }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [title, setTitle] = useState(img.title);
+  const [category, setCategory] = useState(img.category);
+  const [updating, setUpdating] = useState(false);
+
+  const handleUpdate = async () => {
+    setUpdating(true);
+    try {
+      const json = await apiPut(`/gallery/admin/${img._id}`, { title, category });
+      if (json.success) {
+        toast.success("Image updated!");
+        setIsEditing(false);
+        onUpdate();
+      } else {
+        toast.error("Update failed");
+      }
+    } catch {
+      toast.error("Network error");
+    } finally {
+      setUpdating(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!confirm("Are you sure you want to delete this image?")) return;
+    try {
+      await apiDelete(`/gallery/admin/${img._id}`);
+      toast.success("Image deleted");
+      onUpdate();
+    } catch {
+      toast.error("Network error");
+    }
+  };
+
+  return (
+    <div className="relative group rounded-xl overflow-hidden aspect-square border border-gray-200 bg-gray-50">
+      <OptimizedImage 
+        src={img.url} 
+        alt={img.title}
+        width={300}
+        quality={65}
+        className="w-full h-full object-cover transition-transform group-hover:scale-105" 
+      />
+      
+      {/* Overlay Actions */}
+      {!isEditing ? (
+        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 p-3 text-center">
+          <p className="text-white text-xs font-semibold line-clamp-2">{img.title}</p>
+          <span className="text-[9px] bg-gold text-charcoal px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">{img.category}</span>
+          <div className="flex gap-2 mt-2">
+            <button 
+              onClick={() => setIsEditing(true)} 
+              className="bg-white/20 hover:bg-white/40 text-white p-2 rounded-xl backdrop-blur-sm transition-all"
+            >
+              <Settings className="h-3.5 w-3.5" />
+            </button>
+            <button 
+              onClick={handleDelete} 
+              className="bg-red-500/80 hover:bg-red-600 text-white p-2 rounded-xl backdrop-blur-sm transition-all"
+            >
+              <Trash2 className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="absolute inset-0 bg-white/95 flex flex-col gap-2 p-3 overflow-y-auto">
+          <div className="flex justify-between items-center mb-1">
+            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Edit Details</span>
+            <button onClick={() => setIsEditing(false)} className="text-gray-400 hover:text-red-500"><X className="w-3 h-3" /></button>
+          </div>
+          <input 
+            type="text" 
+            value={title} 
+            onChange={e => setTitle(e.target.value)} 
+            className="w-full p-2 border border-gray-100 rounded-lg text-[11px] focus:border-gold outline-none"
+            placeholder="Image Title"
+          />
+          <select 
+            value={category} 
+            onChange={e => setCategory(e.target.value)}
+            className="w-full p-2 border border-gray-100 rounded-lg text-[11px] focus:border-gold outline-none bg-white"
+          >
+            <option value="Venues">Venues</option>
+            <option value="Weddings">Weddings</option>
+            <option value="Corporate">Corporate</option>
+            <option value="Parties">Parties</option>
+          </select>
+          <button 
+            onClick={handleUpdate}
+            disabled={updating}
+            className="w-full bg-gold text-charcoal py-1.5 rounded-lg text-[10px] font-bold mt-1 hover:shadow-md transition-all disabled:opacity-50"
+          >
+            {updating ? "..." : "Save Changes"}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
 const AdminDashboard = () => {
   const [admin, setAdmin] = useState<AdminData | null>(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [activeTab, setActiveTab] = useState("Dashboard");
+  const navigate = useNavigate();
+  const [heroMode, setHeroMode] = useState<'image' | 'video'>('image');
   
   // Upload State
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Auth check
+  useEffect(() => {
+    const checkAdmin = async () => {
+      const token = localStorage.getItem("adminToken");
+      if (!token) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const data = await apiGet("/auth/verify");
+        if (data.isValid) {
+          setAdmin(data.admin);
+        } else {
+          localStorage.removeItem("adminToken");
+        }
+      } catch (err) {
+        console.error("Auth verify failed", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    checkAdmin();
+  }, []);
   
-  // Fetch current banner preview
-  const { data: currentBanner, refetch: refetchBanner } = useQuery({
-    queryKey: ['currentBanner'],
+  // Fetch carousel slides and settings
+  const { data: bannerData, refetch: refetchBanner } = useQuery({
+    queryKey: ['currentBannerSlides'],
     queryFn: async () => {
       const json = await apiGet("/banner/current");
-      return json.data;
+      if (json.settings) setHeroMode(json.settings.heroMode);
+      return json;
     }
   });
+
+  const slides = bannerData?.data;
 
   // Lifted Messages Query for Notifications
   const { data: messages, refetch: refetchMessages, isLoading: messagesLoading } = useQuery({
@@ -890,30 +1005,30 @@ const AdminDashboard = () => {
     }
   };
 
-  // Banner Content State
-  const [bannerContent, setBannerContent] = useState({
-    slogan: "",
-    title: "",
-    subtitle: ""
-  });
+  const [bannerContent, setBannerContent] = useState({ slogan: "", title: "", subtitle: "" });
   const [updatingContent, setUpdatingContent] = useState(false);
 
+  const [selectedSlot, setSelectedSlot] = useState(1);
+  const currentBanner = slides?.find((s: any) => s.order === selectedSlot);
+
+  // Initialize banner content from the first available slide or a default
   useEffect(() => {
-    if (currentBanner) {
+    const firstSlide = slides?.find((s: any) => s.slogan || s.title || s.subtitle);
+    if (firstSlide) {
       setBannerContent({
-        slogan: currentBanner.slogan || "",
-        title: currentBanner.title || "",
-        subtitle: currentBanner.subtitle || ""
+        slogan: firstSlide.slogan || "",
+        title: firstSlide.title || "",
+        subtitle: firstSlide.subtitle || ""
       });
     }
-  }, [currentBanner]);
+  }, [slides]);
 
   const handleUpdateContent = async () => {
     setUpdatingContent(true);
     try {
-      const json = await apiPut("/banner/admin/content", bannerContent);
+      const json = await apiPut("/banner/admin/content-all", bannerContent);
       if (json.success) {
-        toast.success("Banner text content updated!");
+        toast.success("Text updated for all slides!");
         refetchBanner();
       } else {
         toast.error("Failed to update banner content");
@@ -924,39 +1039,38 @@ const AdminDashboard = () => {
       setUpdatingContent(false);
     }
   };
+
+  const handleUpdateHeroMode = async (mode: 'image' | 'video') => {
+    try {
+      const json = await apiPut("/banner/admin/settings", { heroMode: mode });
+      if (json.success) {
+        setHeroMode(mode);
+        setSelectedSlot(mode === 'video' ? 0 : 1);
+        toast.success(`Hero mode set to ${mode}`);
+        refetchBanner();
+      }
+    } catch {
+      toast.error("Failed to update mode");
+    }
+  };
+
+
+  if (loading) {
+    return (
+      <div className="h-screen bg-charcoal flex items-center justify-center">
+        <Loader2 className="h-12 w-12 text-gold animate-spin" />
+      </div>
+    );
+  }
+
+  if (!admin) {
+    return <Navigate to="/admin/login" />;
+  }
   
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const verifyToken = async () => {
-      const token = localStorage.getItem("adminToken");
-      if (!token) {
-        toast.error("Please login first");
-        navigate("/login");
-        return;
-      }
-
-      try {
-        const data = await apiGet("/auth/verify");
-        if (data.isValid) {
-          setAdmin(data.admin);
-        } else {
-          localStorage.removeItem("adminToken");
-          toast.error("Session expired. Please login again.");
-          navigate("/login");
-        }
-      } catch (err) {
-        navigate("/login");
-      }
-    };
-
-    verifyToken();
-  }, [navigate]);
-
   const handleLogout = () => {
     localStorage.removeItem("adminToken");
     toast.success("Logged out successfully");
-    navigate("/login");
+    navigate("/admin/login");
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -982,7 +1096,8 @@ const AdminDashboard = () => {
     setUploading(true);
     const formData = new FormData();
     formData.append("media", file);
-    // Also include text content in upload
+    formData.append("order", selectedSlot.toString());
+    
     if (bannerContent.slogan) formData.append("slogan", bannerContent.slogan);
     if (bannerContent.title) formData.append("title", bannerContent.title);
     if (bannerContent.subtitle) formData.append("subtitle", bannerContent.subtitle);
@@ -995,7 +1110,7 @@ const AdminDashboard = () => {
       const data = await response.json();
       
       if (response.ok && data.success) {
-        toast.success("Landing page banner successfully updated!");
+        toast.success(`Hero slide ${selectedSlot} successfully updated!`);
         clearFile();
         refetchBanner();
       } else {
@@ -1008,16 +1123,31 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleToggleBackground = async () => {
+    if (!currentBanner) return;
+    try {
+      const nextMode = !currentBanner.useVideoBackground;
+      const json = await apiPut(`/banner/admin/toggle/${currentBanner._id}`, { useVideoBackground: nextMode });
+      if (json.success) {
+        toast.success(`Background type updated for Slide ${selectedSlot}`);
+        refetchBanner();
+      }
+    } catch {
+      toast.error("Toggle error");
+    }
+  };
+
   const handleDeleteBanner = async () => {
-    if (!confirm("Are you sure you want to permanently delete the live hero banner? This action cannot be undone.")) return;
+    if (!currentBanner) return;
+    if (!confirm(`Are you sure you want to permanently delete Hero Slide ${selectedSlot}?`)) return;
     
     try {
-      const data = await apiDelete("/banner/admin");
+      const data = await apiDelete(`/banner/admin/${currentBanner._id}`);
       if (data.success) {
-        toast.success("Banner securely deleted from servers!");
+        toast.success(`Slide ${selectedSlot} deleted!`);
         refetchBanner();
       } else {
-        toast.error(data.message || "Failed to delete banner");
+        toast.error(data.message || "Failed to delete slide");
       }
     } catch {
       toast.error("Network error");
@@ -1187,10 +1317,10 @@ const AdminDashboard = () => {
             </div>
             <div className="flex items-center gap-3 pl-6 border-l border-gray-200">
               <div className="h-9 w-9 bg-charcoal rounded-full flex items-center justify-center shadow-inner shrink-0">
-                <span className="text-gold font-bold text-sm">{admin.username.charAt(0).toUpperCase()}</span>
+                <span className="text-gold font-bold text-sm">{admin?.username?.charAt(0)?.toUpperCase()}</span>
               </div>
               <div className="hidden sm:block text-sm">
-                <p className="font-semibold text-charcoal leading-none mb-1">{admin.username}</p>
+                <p className="font-semibold text-charcoal leading-none mb-1">{admin?.username}</p>
                 <p className="text-gray-400 text-xs">Administrator</p>
               </div>
             </div>
@@ -1335,15 +1465,84 @@ const AdminDashboard = () => {
                       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         {/* Banner Upload Card */}
                         <div className="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 relative">
-                          <div className="flex justify-between items-start mb-6">
+                          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                             <div>
-                              <h2 className="text-xl font-bold text-charcoal mb-1">Landing Page Banner</h2>
-                              <p className="text-sm text-gray-500">Upload a high-quality video or image for the main hero banner. Max size: 50MB.</p>
+                              <h2 className="text-xl font-bold text-charcoal mb-1">Hero Section Management</h2>
+                              <p className="text-sm text-gray-500">Choose between a single looping video or a 3-image slider.</p>
+                            </div>
+                            
+                            {/* Global Mode Toggle */}
+                            <div className="flex bg-gray-100 p-1 rounded-xl border border-gray-200">
+                              <button
+                                onClick={() => handleUpdateHeroMode('video')}
+                                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all ${heroMode === 'video' ? 'bg-white text-charcoal shadow-sm' : 'text-gray-400 hover:text-charcoal'}`}
+                              >
+                                <FileVideo className="w-3.5 h-3.5" /> Single Video
+                              </button>
+                              <button
+                                onClick={() => handleUpdateHeroMode('image')}
+                                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all ${heroMode === 'image' ? 'bg-white text-charcoal shadow-sm' : 'text-gray-400 hover:text-charcoal'}`}
+                              >
+                                <ImageIcon className="w-3.5 h-3.5" /> Image Slider
+                              </button>
+                            </div>
+                          </div>
+
+                          {/* Slot Picker */}
+                          <div className="flex items-center justify-between mb-6 pb-6 border-b border-gray-50">
+                            <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">
+                              {heroMode === 'video' ? 'Active Media' : 'Slider Configuration'}
+                            </label>
+                            <div className="flex gap-2 bg-gray-50 p-1.5 rounded-xl border border-gray-100">
+                              {heroMode === 'video' ? (
+                                <button
+                                  onClick={() => setSelectedSlot(0)}
+                                  className={`px-6 py-2 rounded-lg text-xs font-bold transition-all bg-gold text-charcoal shadow-sm`}
+                                >
+                                  Video Slot
+                                  {slides?.find((s: any) => s.order === 0) && (
+                                    <span className="ml-1.5 w-1.5 h-1.5 bg-green-500 rounded-full inline-block" />
+                                  )}
+                                </button>
+                              ) : (
+                                [1, 2, 3].map(slot => (
+                                  <button
+                                    key={slot}
+                                    onClick={() => setSelectedSlot(slot)}
+                                    className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${selectedSlot === slot ? 'bg-gold text-charcoal shadow-sm' : 'text-gray-400 hover:text-charcoal'}`}
+                                  >
+                                    Slide {slot}
+                                    {slides?.find((s: any) => s.order === slot) && (
+                                      <span className="ml-1.5 w-1.5 h-1.5 bg-green-500 rounded-full inline-block" />
+                                    )}
+                                  </button>
+                                ))
+                              )}
+                            </div>
+                          </div>
+
+                          <div className="mb-8 p-4 bg-amber-50/50 rounded-2xl border border-amber-100/50 flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                               <div className={`w-3 h-3 rounded-full ${currentBanner ? 'bg-green-500' : 'bg-gray-300'}`} />
+                               <span className="text-xs font-bold text-charcoal uppercase tracking-wider">
+                                 {heroMode === 'video' ? 'Video Slot' : `Slide ${selectedSlot}`}: {currentBanner ? 'Active' : 'Empty'}
+                               </span>
                             </div>
                             {currentBanner && (
-                              <button onClick={handleDeleteBanner} title="Delete live banner" className="flex-shrink-0 text-red-500 hover:bg-red-50 p-2.5 rounded-xl transition-colors border border-red-100 shadow-sm cursor-pointer group">
-                                <Trash2 className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                              </button>
+                               <div className="flex items-center gap-4">
+                                 <div className="flex items-center gap-2">
+                                   <span className="text-[10px] font-bold text-gray-400 uppercase">Background: {currentBanner.useVideoBackground ? 'Video' : 'Image'}</span>
+                                   <button 
+                                    onClick={handleToggleBackground}
+                                    className={`w-10 h-5 rounded-full relative transition-colors ${currentBanner.useVideoBackground ? 'bg-gold' : 'bg-gray-300'}`}
+                                   >
+                                      <div className={`absolute top-1 w-3 h-3 bg-white rounded-full transition-all ${currentBanner.useVideoBackground ? 'right-1' : 'left-1'}`} />
+                                   </button>
+                                 </div>
+                                 <button onClick={handleDeleteBanner} title="Delete this slide" className="text-red-500 hover:bg-red-50 p-1.5 rounded-lg transition-colors">
+                                   <Trash2 className="w-4 h-4" />
+                                 </button>
+                               </div>
                             )}
                           </div>
 
@@ -1488,6 +1687,7 @@ const AdminDashboard = () => {
                         </div>
                         
                         <ContactSettingsCard />
+                        {admin && <AdminSecurityCard currentUsername={admin.username} onLogout={handleLogout} />}
                         <TestimonialsSettingsCard />
                         <StatsSettingsCard />
                       </div>
@@ -1510,6 +1710,102 @@ const AdminDashboard = () => {
           </div>
         </div>
       </main>
+    </div>
+  );
+};
+
+const AdminSecurityCard = ({ currentUsername, onLogout }: { currentUsername: string, onLogout: () => void }) => {
+  const [formData, setFormData] = useState({ 
+    username: currentUsername, 
+    password: "", 
+    confirmPassword: "" 
+  });
+  const [loading, setLoading] = useState(false);
+
+  const handleUpdate = async () => {
+    if (formData.password && formData.password !== formData.confirmPassword) {
+      return toast.error("Passwords do not match!");
+    }
+    
+    if (formData.password && formData.password.length < 6) {
+      return toast.error("Password must be at least 6 characters!");
+    }
+
+    setLoading(true);
+    try {
+      const payload: any = { username: formData.username };
+      if (formData.password) payload.password = formData.password;
+
+      const json = await apiPut("/auth/admin/update", payload);
+      if (json.success) {
+        toast.success("Security settings updated! Please login again.");
+        // Force logout to refresh session with new credentials
+        setTimeout(() => onLogout(), 1500);
+      } else {
+        toast.error(json.message || "Update failed");
+      }
+    } catch {
+      toast.error("Network error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 flex flex-col h-full">
+      <div className="flex items-center gap-3 mb-1">
+        <div className="p-2 bg-red-50 rounded-lg">
+          <Shield className="w-5 h-5 text-red-500" />
+        </div>
+        <h2 className="text-xl font-bold text-charcoal">Admin Security</h2>
+      </div>
+      <p className="text-sm text-gray-500 mb-6">Update your login credentials. You will be logged out after a successful update.</p>
+      
+      <div className="space-y-4 flex-1 text-left">
+        <div>
+          <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Username</label>
+          <input 
+            type="text" 
+            value={formData.username} 
+            onChange={e => setFormData({...formData, username: e.target.value})} 
+            className="w-full p-3 border border-gray-200 rounded-xl mt-1 text-sm focus:ring-2 focus:ring-gold/50 focus:border-gold outline-none transition-all" 
+          />
+        </div>
+        <div>
+          <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">New Password (optional)</label>
+          <div className="relative">
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300" />
+            <input 
+              type="password" 
+              placeholder="Leave blank to keep current"
+              value={formData.password} 
+              onChange={e => setFormData({...formData, password: e.target.value})} 
+              className="w-full pl-10 pr-3 py-3 border border-gray-200 rounded-xl mt-1 text-sm focus:ring-2 focus:ring-gold/50 focus:border-gold outline-none transition-all" 
+            />
+          </div>
+        </div>
+        <div>
+          <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Confirm New Password</label>
+          <div className="relative">
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300" />
+            <input 
+              type="password" 
+              value={formData.confirmPassword} 
+              onChange={e => setFormData({...formData, confirmPassword: e.target.value})} 
+              className="w-full pl-10 pr-3 py-3 border border-gray-200 rounded-xl mt-1 text-sm focus:ring-2 focus:ring-gold/50 focus:border-gold outline-none transition-all" 
+            />
+          </div>
+        </div>
+      </div>
+      
+      <button 
+        onClick={handleUpdate} 
+        disabled={loading} 
+        className="w-full mt-8 bg-red-600 text-white py-3 rounded-xl font-bold hover:bg-red-700 transition-colors flex items-center justify-center gap-2"
+      >
+        {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Shield className="w-4 h-4" />}
+        {loading ? "Updating..." : "Update Security Credentials"}
+      </button>
     </div>
   );
 };

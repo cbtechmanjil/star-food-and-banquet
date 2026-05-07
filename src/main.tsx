@@ -3,13 +3,17 @@ import Lenis from "lenis";
 import App from "./App.tsx";
 import "./index.css";
 
-// Initialize Lenis smooth scrolling globally
-const lenis = new Lenis();
+// Initialize Lenis smooth scrolling globally with safety check
+try {
+  const lenis = new Lenis();
 
-function raf(time: number) {
-    lenis.raf(time);
-    requestAnimationFrame(raf);
+  function raf(time: number) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+  }
+  requestAnimationFrame(raf);
+} catch (error) {
+  console.error("Lenis initialization failed:", error);
 }
-requestAnimationFrame(raf);
 
 createRoot(document.getElementById("root")!).render(<App />);

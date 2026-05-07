@@ -154,6 +154,15 @@ const uploadSettingsMedia = async (file) => {
   }
 };
 
+const getObjectStream = async (objectName) => {
+  const bucketName = process.env.MINIO_BUCKET || "star-food-assets";
+  try {
+    return await minioClient.getObject(bucketName, objectName);
+  } catch (error) {
+    throw new Error(`MinIO Get Object Failed: ${error.message}`);
+  }
+};
+
 module.exports = {
   minioClient,
   initializeMinio,
@@ -162,4 +171,5 @@ module.exports = {
   deleteMedia,
   uploadCafeMedia,
   uploadSettingsMedia,
+  getObjectStream,
 };

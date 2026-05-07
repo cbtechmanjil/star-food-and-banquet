@@ -7,6 +7,7 @@ import partyImg from "@/assets/service-party.jpg";
 import weddingImg from "@/assets/service-wedding.jpg";
 import eventImg from "@/assets/service-event.jpg";
 import statsBg from "@/assets/stats-bg.jpg";
+import OptimizedImage from "./OptimizedImage";
 
 const galleryImages = [
     { src: heroBg, label: "Grand Ballroom" },
@@ -57,10 +58,12 @@ const InfiniteScrollGallery = () => {
                             className="flex-shrink-0 mx-3 overflow-hidden"
                             style={{ width: "320px", height: "500px" }}
                         >
-                            <img
+                            <OptimizedImage
                                 src={img.src}
                                 alt={img.label}
-                                className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                                width={400} // Optimized thumbnail size
+                                quality={70}
+                                className="w-full h-full object-cover transition-transform duration-500 hover:scale-110 will-change-transform"
                                 draggable={false}
                             />
                         </div>
